@@ -22,6 +22,7 @@ def image_type_converter(image):
 
 # this is called after converter to delete all other images
 def delete_rest():
+    # adding some code here
 
 
 # create_table()
@@ -40,15 +41,6 @@ print(*images_data)
 
 c.close
 conn.close()
-
-#file_name = os.path.basename('/Crawler_results_Germany/Crawler_results_Germany/folder_1/iframe_1.png')
-# file name without extension
-#print(os.path.splitext(file_name)[0])
-
-#for filename in os.listdir(os.getcwd()):
-#    with open(os.path.join(os.getcwd(), filename), 'r') as f:  # open in readonly mode
-        # do your stuff
-
 
 print(os.listdir())
 print(os.getcwd())
