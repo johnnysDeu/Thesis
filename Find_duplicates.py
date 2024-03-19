@@ -5,11 +5,12 @@ from hashlib import md5
 import logging
 from collections import Counter
 from glob import glob
-
+import functions
 # ctrl + / to comment out and reverse
 
 #logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
 
 def read_from_db(local_folder):
     path = local_folder + "\\" + 'images.db'
@@ -29,30 +30,33 @@ def read_from_db(local_folder):
     else:
         print("File image.db Not Exists")
 
+
 def find_complete_duplicate_images(folder_path):
     # Dictionary to store file hashes
     hashes = {}
     try:
-        # Iterate through all files in the folder
         for root, dirs, files in os.walk(folder_path):
             for file_name in files:
-                # Check if the file is an image
                 if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
                     file_path = os.path.join(root, file_name)
 
-                    # Open the image using Pillow
                     with Image.open(file_path) as img:
+                        #img_initial=img
                         # Resize the image to reduce hash computation time
                         #img = img.resize((8, 8), Image.ANTIALIAS) # optional resizing
                         # Convert image to grayscale
                         img = img.convert('L')
-
+                        print(img)
                         # Calculate MD5 hash of the image
                         img_hash = md5(img.tobytes()).hexdigest()
+                        #print(img_hash)
+                        #print(hashes)
+
 
                         # Check if the hash already exists
                         if img_hash in hashes:
                             print(f"Duplicate found: {file_path} and {hashes[img_hash]}")
+                            #functions.print_img(img_initial)
                         else:
                             hashes[img_hash] = file_path
     except Exception as e:
@@ -78,7 +82,8 @@ for fold in list(subfolders):
 
 
 if __name__ == "__main__":
-    #folder_path = "/path/to/your/folder"
+    folder_path = "../folder_109"
+    print("Current folder : ", fold)
     find_complete_duplicate_images(fold)
 
 
