@@ -7,8 +7,8 @@ from glob import glob
 
 # ctrl + / to comment out and reverse
 
-logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
-
+#logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 def read_from_db(local_folder):
     path = local_folder + "\\" + 'images.db'
@@ -39,16 +39,17 @@ def image_type_converter(image, folder_local):
         image_name = os.path.splitext(image)
         print("Image name:", image_name[0]) #image name is a tuple
         image_temp = Image.open(full_path)
-        #image_temp = image_temp.convert('RGB')
+        image_temp = image_temp.convert('RGB')
         print("Image Temp:", image_temp)
         image_temp.save(f"{folder_local}\\converted_{image_name[0]}.jpg")
-        #image_temp.save(save_path, "JPEG")
+        image_temp.save(save_path, "JPEG")
         print("Converted Image:", save_path)
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print("Exception details: ", exc_type, fname, exc_tb.tb_lineno)
         print(f"An exception occured: {e}")
+        logging.info(f"Exception: {e}, {exc_tb.tb_lineno} , {image}")  # Log the deleted file name
 
 # we call a func to verify if all images were converted to jpg successfully
 
@@ -71,10 +72,8 @@ def delete_rest(folder_path):
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
     #more changes
 
-#print(os.listdir())
+
 Current_dir = os.getcwd()
-#current_folder =
-#print(Current_dir)
 
 subfolders = [ f.path for f in os.scandir(Current_dir) if f.is_dir()]
 #print(subfolders)
@@ -99,6 +98,6 @@ for files in os.listdir(fold):
         print(f"Skipped file: {files} (already in correct format)")
 print("counter: ", counter)
 
-delete_rest(fold)
+#delete_rest(fold)
 
 #change 20240319
