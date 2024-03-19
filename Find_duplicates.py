@@ -1,6 +1,7 @@
 import sqlite3
 import os, sys
 from PIL import Image
+from hashlib import md5
 import logging
 from collections import Counter
 from glob import glob
@@ -28,54 +29,43 @@ def read_from_db(local_folder):
     else:
         print("File image.db Not Exists")
 
-
-def image_type_converter(image, folder_local):
+def find_complete_duplicate_images(folder_path):
+    # Dictionary to store file hashes
+    hashes = {}
     try:
-        print("Current Folder in function", folder_local)
-        full_path = folder_local + "\\" + image
-        print("Full path: ", full_path)
-        save_path = folder_local + "\\" + "converted_" + image
-        print("New path: ", save_path)
-        image_name = os.path.splitext(image)
-        print("Image name:", image_name[0]) #image name is a tuple
-        image_temp = Image.open(full_path)
-        image_temp = image_temp.convert('RGB')
-        print("Image Temp:", image_temp)
-        image_temp.save(f"{folder_local}\\converted_{image_name[0]}.jpg")
-        image_temp.save(save_path, "JPEG")
-        print("Converted Image:", save_path)
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print("Exception details: ", exc_type, fname, exc_tb.tb_lineno)
-        print(f"An exception occured: {e}")
-        logging.info(f"Exception: {e}, {exc_tb.tb_lineno} , {image}")  # Log the deleted file name
+        # Iterate through all files in the folder
+        for root, dirs, files in os.walk(folder_path):
+            for file_name in files:
+                # Check if the file is an image
+                if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                    file_path = os.path.join(root, file_name)
 
-# we call a func to verify if all images were converted to jpg successfully
+                    # Open the image using Pillow
+                    with Image.open(file_path) as img:
+                        # Resize the image to reduce hash computation time
+                        #img = img.resize((8, 8), Image.ANTIALIAS) # optional resizing
+                        # Convert image to grayscale
+                        img = img.convert('L')
 
-# this is called after converter to delete all other images
-def delete_rest(folder_path):
-    # delete whatever image doent have the word "new" in the name
-    logging.info(f"Folder: {folder_path}")  # Log the deleted file name
-    try:
-        files_local = os.listdir(folder_path)
-        for file_name in files_local:
-            if file_name.lower().endswith(('.png', '.bmp', '.tiff', '.gif')):
-                file_path = os.path.join(folder_path, file_name)
-                print(file_path)
-                os.remove(file_path)
-                print(f"Deleted file: {file_name}")
-                logging.info(f"Deleted file: {file_name}")  # Log the deleted file name
+                        # Calculate MD5 hash of the image
+                        img_hash = md5(img.tobytes()).hexdigest()
+
+                        # Check if the hash already exists
+                        if img_hash in hashes:
+                            print(f"Duplicate found: {file_path} and {hashes[img_hash]}")
+                        else:
+                            hashes[img_hash] = file_path
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
-    #more changes
+        logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
 
 
 Current_dir = os.getcwd()
 
-subfolders = [ f.path for f in os.scandir(Current_dir) if f.is_dir()]
+
+subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
 #print(subfolders)
 #image_type_converter('iframe_1.png')
 
@@ -86,18 +76,10 @@ for fold in list(subfolders):
     #print(images_data)
     #print(os.getcwd())
 
-# this is working
-counter = 0
-for files in os.listdir(fold):
-    if files.lower().endswith(('.png', '.bmp', '.tiff', '.gif')):
-        print(files)
-        print(fold)
-        counter += 1
-        image_type_converter(files, fold)
-    else:
-        print(f"Skipped file: {files} (already in correct format)")
-print("counter: ", counter)
 
-#delete_rest(fold)
+if __name__ == "__main__":
+    #folder_path = "/path/to/your/folder"
+    find_complete_duplicate_images(fold)
+
 
 #change 20240319
