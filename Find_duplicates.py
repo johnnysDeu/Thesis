@@ -4,9 +4,10 @@ from PIL import Image
 from hashlib import md5
 import logging
 import PIL
+import imagehash
 from collections import Counter
 from glob import glob
-from functions import print_img
+import functions
 # ctrl + / to comment out and reverse
 
 #logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -68,7 +69,7 @@ def find_complete_duplicate_images(folder_path):
                         img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS) # optional resizing
                         # Convert image to grayscale
                         img = img.convert('L')
-                        print(img)
+                        #print(img)
                         # Calculate MD5 hash of the image
                         img_hash = md5(img.tobytes()).hexdigest()
                         #print(img_hash)
@@ -99,10 +100,48 @@ def find_complete_duplicate_images(folder_path):
                 print(f"- {file_path}")
                 file.write(f"- {file_path}\n")
             file.close()
+#--------------------------------------------------------------------------------------------------------------------------
+
+def find_near_duplicates(folder_path, threshold=5):
+    # Dictionary to store hash values and file paths
+    hashes = {}
+    duplicates = []
+    # Iterate through all files in the folder
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            # Check if the file is an image
+            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                file_path = os.path.join(root, file_name)
+
+                # Open the image using Pillow
+                with Image.open(file_path) as img:
+                    # Calculate the perceptual hash of the image
+                    img_hash = str(imagehash.average_hash(img))
+
+                    # Check if a similar hash already exists
+                    for h, path in hashes.items():
+                        if abs(int(img_hash, 16) - int(h, 16)) <= threshold:
+                            print(f"Near duplicate found: {file_path} and {path}")
+                            duplicates.append(f"Near duplicate found: {file_path} and {path}")
+                            #file = open('duplicates.txt', 'w')
+                            #file.write(f"Near duplicate found: {file_path} and {path}\n")
+                            break
+
+                    #file.close()
+                    hashes[img_hash] = file_path
+    print(duplicates)
+    file = open('duplicates.txt', 'w')
+    for items in duplicates:
+        if len(items) > 1:
+            file.write(items+"\n")
+    file.close()
+
+#--------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------
+#-------------------------------  End Definitions   -----------------------------------------------------------------------
+
 
 Current_dir = os.getcwd()
-
-
 subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
 #print(subfolders)
 #image_type_converter('iframe_1.png')
@@ -120,11 +159,22 @@ if __name__ == "__main__":
     print("Current folder : ", fold)
     print("Current folder : ", folder_path)
     #find_complete_duplicate_images(folder_path)
+    #find_near_duplicates(folder_path)
 
 
 if __name__ == "__main__":
     image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_73.jpg"
-    with Image.open(image_path) as img:
-        dhashing_image = dhash(img)
-    print(dhashing_image)
+    #with Image.open(image_path) as img:
+        #dhashing_image = dhash(img)
+    #print(dhashing_image)
     #change 20240319
+
+if __name__ == "__main__":
+    image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_72.png"
+    folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
+    img_is_black_or_white(folder_path)
+    #result=functions.img_is_black_or_white(image_path)
+    #if result:
+    #    print(f"The image at '{image_path}' is either completely white or black.")
+    #else:
+    #    print(f"The image at '{image_path}' is not completely white or black.")
