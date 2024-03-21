@@ -3,6 +3,10 @@
 #import matplotlib.image as mpimg
 from PIL import Image
 import os, sys
+import logging
+
+
+logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 
 def print_img(image):
@@ -12,6 +16,7 @@ def print_img(image):
 
     image = Image.open(image)
     image.show()
+
 
 def img_is_black_or_white(image_path):
     threshold= 240
@@ -52,3 +57,21 @@ def img_is_black_or_white(folder_path):
     file.close()
 
 
+def delete_image(file_path):
+
+    logging.info(f"Folder: {file_path}")  # Log the deleted file name
+    file_name = os.path.split(file_path)
+    print("File Name:", file_name[1])
+    print("Path:", file_name[0])
+    try:
+        if file_name[1].lower().endswith(('.png', '.bmp', '.tiff', '.gif', '.jpg')):
+            if os.path.isfile(file_path):
+                print(f"Deleted file: {file_name[1]}")
+                logging.info(f"Deleted file: {file_name[1]}")  # Log the deleted file name
+                os.remove(file_path)
+            else:
+                print(f"The file {file_path} does not exist")
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(f"An error occurred: {e}, {exc_tb.tb_lineno}")

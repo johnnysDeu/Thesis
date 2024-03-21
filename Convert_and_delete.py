@@ -93,10 +93,14 @@ for files in os.listdir(fold):
         print(files)
         print(fold)
         counter += 1
-        image_type_converter(files, fold)
+        #image_type_converter(files, fold)
     else:
         print(f"Skipped file: {files} (already in correct format)")
 print("counter: ", counter)
+
+#folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108" # douleia
+folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1" # spiti
+images_data = read_from_db(folder_path)
 
 #delete_rest(fold)
 
