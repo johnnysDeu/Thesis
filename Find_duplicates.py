@@ -178,4 +178,4 @@ if __name__ == "__main__":
     #    print(f"The image at '{image_path}' is either completely white or black.")
     #else:
     #    print(f"The image at '{image_path}' is not completely white or black.")
-    # a change
+    # a change more changes
