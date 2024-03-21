@@ -91,9 +91,9 @@ def find_complete_duplicate_images(folder_path):
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
         logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
     #print("Duplicate Tuples", duplicates)
-    # folder_name = os.path.split(folder_path)
+    folder_name = os.path.split(folder_path)
     # print(folder_name)
-    new_file = folder_name[1] + ".txt"
+    new_file = "duplicates_" + folder_name[1] + ".txt"
     #display all duplicate images
     for img_hash, files in duplicates.items():
         if len(files) > 1:
@@ -111,7 +111,7 @@ def find_complete_duplicate_images(folder_path):
                         # here we will call delete_image()
                         functions.delete_image(file_path)
                 file_cnt = file_cnt + 1
-    file.close()
+            file.close()
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -163,9 +163,9 @@ if __name__ == "__main__":
 
     for fold in list(subfolders):
         files = os.listdir(fold)
-        #print("Current folder : ", fold)
+        print("Current folder : ", fold)
         # call for all folders in Germany
-        #find_complete_duplicate_images(fold)
+        find_complete_duplicate_images(fold)
         #images_data = read_from_db(fold)
         #print(images_data)
         #print(os.getcwd())
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     #print("Current folder : ", folder_path)
     folder_name = os.path.split(folder_path)
     print(folder_name)
-    find_complete_duplicate_images(folder_path)
+    #find_complete_duplicate_images(folder_path)
     #find_near_duplicates(folder_path)
 
 print("--- %s seconds ---" % (time.time() - start_time))
