@@ -54,6 +54,7 @@ def read_from_db(local_folder):
 
 
 def find_complete_duplicate_images(folder_path):
+    # this function doesnt work very well because the images need to be completely identical and have the same hash.
     # Dictionary to store file hashes
     hashes = {}
     duplicates = {}
@@ -89,17 +90,25 @@ def find_complete_duplicate_images(folder_path):
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
         logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
-
+    print("Duplicate Tuples", duplicates)
     #display all duplicate images
     for img_hash, files in duplicates.items():
         if len(files) > 1:
             file = open('duplicates.txt', 'w')
             file.write(f"Duplicate images with hash {img_hash}:\n")
             print(f"Duplicate images with hash {img_hash}:")
+            file_cnt = 0
             for file_path in files:
                 print(f"- {file_path}")
                 file.write(f"- {file_path}\n")
+                if file_cnt >= 1:
+                    if delete_flag:
+                        print("Delete second Tuple:", file_path)
+                        # here we will call delete_image()
+                        functions.delete_image(file_path)
+                file_cnt = file_cnt + 1
             file.close()
+
 #--------------------------------------------------------------------------------------------------------------------------
 
 def find_near_duplicates(folder_path, threshold=5):
@@ -123,11 +132,12 @@ def find_near_duplicates(folder_path, threshold=5):
                         if abs(int(img_hash, 16) - int(h, 16)) <= threshold:
                             print(f"Near duplicate found: {file_path} and {path}")
                             duplicates.append(f"Near duplicate found: {file_path} and {path}")
+                            # call detele_image to delete only the second in each pair
+                            #functions.delete_image(path)
                             #file = open('duplicates.txt', 'w')
                             #file.write(f"Near duplicate found: {file_path} and {path}\n")
+                            #file.close() # this will overwrite all and leave only the last pair
                             break
-
-                    #file.close()
                     hashes[img_hash] = file_path
     print(duplicates)
     file = open('duplicates.txt', 'w')
@@ -149,19 +159,21 @@ subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
 for fold in list(subfolders):
     files = os.listdir(fold)
     #print("Current folder : ", fold)
-    images_data = read_from_db(fold)
+    #images_data = read_from_db(fold)
     #print(images_data)
     #print(os.getcwd())
 
-
+# when delete flag = true, delete the duplicate
+delete_flag = False
 if __name__ == "__main__":
-    folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
+    #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
+    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2" #spiti
     print("Current folder : ", fold)
     print("Current folder : ", folder_path)
-    #find_complete_duplicate_images(folder_path)
+    find_complete_duplicate_images(folder_path)
     #find_near_duplicates(folder_path)
 
-
+# dhashing, not used
 if __name__ == "__main__":
     image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_73.jpg"
     #with Image.open(image_path) as img:
@@ -169,6 +181,7 @@ if __name__ == "__main__":
     #print(dhashing_image)
     #change 20240319
 
+# black and white image
 if __name__ == "__main__":
     image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_72.png"
     folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
@@ -180,7 +193,8 @@ if __name__ == "__main__":
     #    print(f"The image at '{image_path}' is not completely white or black.")
     # a change more changes
 
+# call detele image
 if __name__ == "__main__":
     image_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1\\converted_iframe_1.jpg" # spiti\\converted_iframe_1.jpg"
     image_name = "converted_iframe_1.jpg"
-    functions.delete_image(image_path)
+    #functions.delete_image(image_path)
