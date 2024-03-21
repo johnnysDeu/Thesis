@@ -172,9 +172,10 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_72.png"
     folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
-    img_is_black_or_white(folder_path)
+    functions.img_is_black_or_white(folder_path)
     #result=functions.img_is_black_or_white(image_path)
     #if result:
     #    print(f"The image at '{image_path}' is either completely white or black.")
     #else:
     #    print(f"The image at '{image_path}' is not completely white or black.")
+    # a change
