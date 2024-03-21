@@ -1,13 +1,37 @@
 import sqlite3
 import os, sys
 from PIL import Image
+from hashlib import md5
 import logging
+import PIL
+import imagehash
 from collections import Counter
 from glob import glob
-
+import functions
 # ctrl + / to comment out and reverse
 
-logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+#logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
+
+def dhash(image, hash_size=128):
+    try:
+        # Convert the image to grayscale and resize it
+        #image = image.convert('L').resize((hash_size + 1, hash_size), PIL.Image.Resampling.LANCZOS)
+        img = image.resize((hash_size + 1, hash_size), PIL.Image.Resampling.LANCZOS)  # optional resizing
+        img = img.convert('L')
+        pixels = list(img.getdata()) # get pixel values
+        print(pixels)
+        # Calculate the difference between adjacent pixels
+        diff = [1 if pixels[i] > pixels[i + 1] else 0 for i in range(len(pixels) - 1)]
+
+        # Convert the binary difference to a hexadecimal hash
+        return hex(int(''.join(map(str, diff)), 2))[2:]
+    except Exception as e:
+        xc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
+        logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
 
 
 def read_from_db(local_folder):
@@ -29,54 +53,96 @@ def read_from_db(local_folder):
         print("File image.db Not Exists")
 
 
-def image_type_converter(image, folder_local):
+def find_complete_duplicate_images(folder_path):
+    # Dictionary to store file hashes
+    hashes = {}
+    duplicates = {}
     try:
-        print("Current Folder in function", folder_local)
-        full_path = folder_local + "\\" + image
-        print("Full path: ", full_path)
-        save_path = folder_local + "\\" + "converted_" + image
-        print("New path: ", save_path)
-        image_name = os.path.splitext(image)
-        print("Image name:", image_name[0]) #image name is a tuple
-        image_temp = Image.open(full_path)
-        #image_temp = image_temp.convert('RGB')
-        print("Image Temp:", image_temp)
-        image_temp.save(f"{folder_local}\\converted_{image_name[0]}.jpg")
-        #image_temp.save(save_path, "JPEG")
-        print("Converted Image:", save_path)
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print("Exception details: ", exc_type, fname, exc_tb.tb_lineno)
-        print(f"An exception occured: {e}")
+        for root, dirs, files in os.walk(folder_path):
+            for file_name in files:
+                if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                    file_path = os.path.join(root, file_name)
 
-# we call a func to verify if all images were converted to jpg successfully
+                    with Image.open(file_path) as img:
+                        img_initial=img
+                        # Resize the image to reduce hash computation time
+                        img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS) # optional resizing
+                        # Convert image to grayscale
+                        img = img.convert('L')
+                        #print(img)
+                        # Calculate MD5 hash of the image
+                        img_hash = md5(img.tobytes()).hexdigest()
+                        #print(img_hash)
+                        #print(hashes)
 
-# this is called after converter to delete all other images
-def delete_rest(folder_path):
-    # delete whatever image doent have the word "new" in the name
-    logging.info(f"Folder: {folder_path}")  # Log the deleted file name
-    try:
-        files_local = os.listdir(folder_path)
-        for file_name in files_local:
-            if file_name.lower().endswith(('.png', '.bmp', '.tiff', '.gif')):
-                file_path = os.path.join(folder_path, file_name)
-                print(file_path)
-                os.remove(file_path)
-                print(f"Deleted file: {file_name}")
-                logging.info(f"Deleted file: {file_name}")  # Log the deleted file name
+
+                        # Check if the hash already exists
+                        if img_hash in hashes:
+                            print(f"Duplicate found: {file_path} and {hashes[img_hash]}")
+                            if img_hash not in duplicates:
+                                duplicates[img_hash] = [hashes[img_hash]]
+                            duplicates[img_hash].append(file_path)
+                        else:
+                            hashes[img_hash] = file_path
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
-    #more changes
+        logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
 
-#print(os.listdir())
+    #display all duplicate images
+    for img_hash, files in duplicates.items():
+        if len(files) > 1:
+            file = open('duplicates.txt', 'w')
+            file.write(f"Duplicate images with hash {img_hash}:\n")
+            print(f"Duplicate images with hash {img_hash}:")
+            for file_path in files:
+                print(f"- {file_path}")
+                file.write(f"- {file_path}\n")
+            file.close()
+#--------------------------------------------------------------------------------------------------------------------------
+
+def find_near_duplicates(folder_path, threshold=5):
+    # Dictionary to store hash values and file paths
+    hashes = {}
+    duplicates = []
+    # Iterate through all files in the folder
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            # Check if the file is an image
+            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                file_path = os.path.join(root, file_name)
+
+                # Open the image using Pillow
+                with Image.open(file_path) as img:
+                    # Calculate the perceptual hash of the image
+                    img_hash = str(imagehash.average_hash(img))
+
+                    # Check if a similar hash already exists
+                    for h, path in hashes.items():
+                        if abs(int(img_hash, 16) - int(h, 16)) <= threshold:
+                            print(f"Near duplicate found: {file_path} and {path}")
+                            duplicates.append(f"Near duplicate found: {file_path} and {path}")
+                            #file = open('duplicates.txt', 'w')
+                            #file.write(f"Near duplicate found: {file_path} and {path}\n")
+                            break
+
+                    #file.close()
+                    hashes[img_hash] = file_path
+    print(duplicates)
+    file = open('duplicates.txt', 'w')
+    for items in duplicates:
+        if len(items) > 1:
+            file.write(items+"\n")
+    file.close()
+
+#--------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------
+#-------------------------------  End Definitions   -----------------------------------------------------------------------
+
+
 Current_dir = os.getcwd()
-#current_folder =
-#print(Current_dir)
-
-subfolders = [ f.path for f in os.scandir(Current_dir) if f.is_dir()]
+subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
 #print(subfolders)
 #image_type_converter('iframe_1.png')
 
@@ -87,16 +153,28 @@ for fold in list(subfolders):
     #print(images_data)
     #print(os.getcwd())
 
-# this is working
-counter = 0
-for files in os.listdir(fold):
-    if files.lower().endswith(('.png', '.bmp', '.tiff', '.gif')):
-        print(files)
-        print(fold)
-        counter += 1
-        image_type_converter(files, fold)
-    else:
-        print(f"Skipped file: {files} (already in correct format)")
-print("counter: ", counter)
 
-delete_rest(fold)
+if __name__ == "__main__":
+    folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
+    print("Current folder : ", fold)
+    print("Current folder : ", folder_path)
+    #find_complete_duplicate_images(folder_path)
+    #find_near_duplicates(folder_path)
+
+
+if __name__ == "__main__":
+    image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_73.jpg"
+    #with Image.open(image_path) as img:
+        #dhashing_image = dhash(img)
+    #print(dhashing_image)
+    #change 20240319
+
+if __name__ == "__main__":
+    image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_72.png"
+    folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
+    img_is_black_or_white(folder_path)
+    #result=functions.img_is_black_or_white(image_path)
+    #if result:
+    #    print(f"The image at '{image_path}' is either completely white or black.")
+    #else:
+    #    print(f"The image at '{image_path}' is not completely white or black.")
