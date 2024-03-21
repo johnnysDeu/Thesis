@@ -8,6 +8,7 @@ import imagehash
 from collections import Counter
 from glob import glob
 import functions
+import time
 # ctrl + / to comment out and reverse
 
 #logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -76,7 +77,6 @@ def find_complete_duplicate_images(folder_path):
                         #print(img_hash)
                         #print(hashes)
 
-
                         # Check if the hash already exists
                         if img_hash in hashes:
                             print(f"Duplicate found: {file_path} and {hashes[img_hash]}")
@@ -90,11 +90,15 @@ def find_complete_duplicate_images(folder_path):
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
         logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
-    print("Duplicate Tuples", duplicates)
+    #print("Duplicate Tuples", duplicates)
+    # folder_name = os.path.split(folder_path)
+    # print(folder_name)
+    new_file = folder_name[1] + ".txt"
     #display all duplicate images
     for img_hash, files in duplicates.items():
         if len(files) > 1:
-            file = open('duplicates.txt', 'w')
+            #file = open('duplicates.txt', 'w')
+            file = open(new_file, 'a') # append mode, to avoid overwriting
             file.write(f"Duplicate images with hash {img_hash}:\n")
             print(f"Duplicate images with hash {img_hash}:")
             file_cnt = 0
@@ -107,7 +111,7 @@ def find_complete_duplicate_images(folder_path):
                         # here we will call delete_image()
                         functions.delete_image(file_path)
                 file_cnt = file_cnt + 1
-            file.close()
+    file.close()
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -150,28 +154,37 @@ def find_near_duplicates(folder_path, threshold=5):
 #--------------------------------------------------------------------------------------------------------------------------
 #-------------------------------  End Definitions   -----------------------------------------------------------------------
 
+delete_flag = False
+if __name__ == "__main__":
+    # Current_dir = os.getcwd()
+    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
+    subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
+    # print(subfolders)
 
-Current_dir = os.getcwd()
-subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
-#print(subfolders)
-#image_type_converter('iframe_1.png')
-
-for fold in list(subfolders):
-    files = os.listdir(fold)
-    #print("Current folder : ", fold)
-    #images_data = read_from_db(fold)
-    #print(images_data)
-    #print(os.getcwd())
+    for fold in list(subfolders):
+        files = os.listdir(fold)
+        #print("Current folder : ", fold)
+        # call for all folders in Germany
+        #find_complete_duplicate_images(fold)
+        #images_data = read_from_db(fold)
+        #print(images_data)
+        #print(os.getcwd())
 
 # when delete flag = true, delete the duplicate
 delete_flag = False
+start_time = time.time()
 if __name__ == "__main__":
     #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
-    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2" #spiti
-    print("Current folder : ", fold)
-    print("Current folder : ", folder_path)
+    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_3" #spiti
+    #print("Current folder : ", fold)
+    #print("Current folder : ", folder_path)
+    folder_name = os.path.split(folder_path)
+    print(folder_name)
     find_complete_duplicate_images(folder_path)
     #find_near_duplicates(folder_path)
+
+print("--- %s seconds ---" % (time.time() - start_time))
+
 
 # dhashing, not used
 if __name__ == "__main__":
