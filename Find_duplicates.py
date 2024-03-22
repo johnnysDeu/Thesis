@@ -79,7 +79,7 @@ def find_complete_duplicate_images(folder_path) -> None:
                         # Calculate MD5 hash of the image
                         img_hash = md5(img.tobytes()).hexdigest()
                         #print(img_hash)
-                        #print(hashes)
+                        print(hashes)
 
                         # Check if the hash already exists
                         if img_hash in hashes:
@@ -95,10 +95,10 @@ def find_complete_duplicate_images(folder_path) -> None:
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
         logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
 
-    #print("Duplicate Tuples", duplicates)
+    print("Duplicate Tuples", duplicates)
     folder_name = os.path.split(folder_path)
     # print(folder_name)
-    new_file = "duplicates_" + folder_name[1] + ".txt"
+    new_file = "complete_duplicates_" + folder_name[1] + ".txt"
     #display all duplicate images
     for img_hash, files in duplicates.items():
         if len(files) > 1:
@@ -144,7 +144,7 @@ def find_near_duplicates(folder_path) -> None:
                             duplicates.append(f"Near duplicate found: {file_path} and {path}")
 
                             #call display images to check the pairs
-                            functions.display_img(file_path, path)
+                            #functions.display_img(file_path, path)
 
 
                             # call detele_image to delete only the second in each pair
@@ -167,63 +167,3 @@ def find_near_duplicates(folder_path) -> None:
 #-------------------------------  End Definitions   -----------------------------------------------------------------------
 
 
-# when delete flag = true, delete the duplicate
-delete_flag = False
-if __name__ == "__main__":
-    # Current_dir = os.getcwd()
-    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
-    subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
-    # print(subfolders)
-
-    for fold in list(subfolders):
-        files = os.listdir(fold)
-        print("Current folder : ", fold)
-        # call for all folders in Germany
-        #find_complete_duplicate_images(fold)
-        #find_near_duplicates(fold)
-        #images_data = read_from_db(fold)
-        #print(images_data)
-        #print(os.getcwd())
-
-
-# when delete flag = true, delete the duplicate
-delete_flag = False
-start_time = time.time()
-if __name__ == "__main__":
-    #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
-    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_3" #spiti
-    #print("Current folder : ", fold)
-    #print("Current folder : ", folder_path)
-    folder_name = os.path.split(folder_path)
-    #print(folder_name)
-    #find_complete_duplicate_images(folder_path)
-    find_near_duplicates(folder_path)
-
-print("--- %s seconds ---" % (time.time() - start_time))
-
-
-# dhashing, not used
-if __name__ == "__main__":
-    image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_73.jpg"
-    #with Image.open(image_path) as img:
-        #dhashing_image = dhash(img)
-    #print(dhashing_image)
-    #change 20240319
-
-# black and white image
-if __name__ == "__main__":
-    image_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108\\iframe_72.png"
-    folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"
-    #functions.img_is_black_or_white(folder_path)
-    #result=functions.img_is_black_or_white(image_path)
-    #if result:
-    #    print(f"The image at '{image_path}' is either completely white or black.")
-    #else:
-    #    print(f"The image at '{image_path}' is not completely white or black.")
-    # a change more changes
-
-# call detele image
-if __name__ == "__main__":
-    image_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1\\converted_iframe_1.jpg" # spiti\\converted_iframe_1.jpg"
-    image_name = "converted_iframe_1.jpg"
-    #functions.delete_image(image_path)
