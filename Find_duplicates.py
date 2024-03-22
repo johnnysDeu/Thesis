@@ -5,6 +5,7 @@ from hashlib import md5
 import logging
 import PIL
 import imagehash
+import numpy as np
 from collections import Counter
 from glob import glob
 import functions
@@ -58,7 +59,7 @@ def read_from_db(local_folder) -> list[str]: # ->
         print("File image.db Not Exists")
 
 
-def find_complete_duplicate_images(folder_path) -> None:
+def find_complete_duplicate_images(folder_path, delete_flag) -> None:
     # this function doesnt work very well because the images need to be completely identical and have the same hash.
     # Dictionary to store file hashes
     hashes: dict[str, str] = {}
@@ -120,7 +121,12 @@ def find_complete_duplicate_images(folder_path) -> None:
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-def find_near_duplicates(folder_path) -> None:
+def mse(image1, image2):
+    # Calculate the Mean Squared Error between two images
+    return np.mean((np.array(image1) - np.array(image2)) ** 2)
+
+
+def find_near_duplicates(folder_path, delete_flag) -> None:
     # Dictionary to store hash values and file paths
     threshold: int = 5
     hashes: dict[str, str] = {}
@@ -134,12 +140,19 @@ def find_near_duplicates(folder_path) -> None:
 
                 # Open the image using Pillow
                 with Image.open(file_path) as img:
+                    # image processing
+                    img = img.resize((128, 128), Image.ANTIALIAS)
+                    img = img.convert('L')  # Convert to grayscale
+
                     # Calculate the perceptual hash of the image
                     img_hash = str(imagehash.average_hash(img))
-
+                    print("Img_hash", img_hash)
                     # Check if a similar hash already exists
                     for h, path in hashes.items():
-                        if abs(int(img_hash, 16) - int(h, 16)) <= threshold:
+                        print("Int Hash", int(img_hash, 16))
+                        print("Int Hash H", int(h, 16))
+
+                        if abs(int(img_hash, 16) - int(h, 16)) <= threshold: # hamming distance for HEX
                             print(f"Near duplicate found: {file_path} and {path}")
                             duplicates.append(f"Near duplicate found: {file_path} and {path}")
 
@@ -155,12 +168,16 @@ def find_near_duplicates(folder_path) -> None:
                             break
                     hashes[img_hash] = file_path
     print(duplicates)
+    folder_name = os.path.split(folder_path)
     new_file2 = "near_duplicates_" + folder_name[1] + ".txt"
     file = open(new_file2, 'w')
     for items in duplicates:
         if len(items) > 1:
             file.write(items+"\n")
     file.close()
+
+
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------
