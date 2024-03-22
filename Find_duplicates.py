@@ -10,6 +10,9 @@ from glob import glob
 import functions
 import time
 # ctrl + / to comment out and reverse
+# use type annotations x : int = 10
+# data : dict[str, int] = {'bob':1 , 'john':2}
+#elements: list[str] = [1, 2, 'a'] # Mypy gives a an error here
 
 #logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -35,7 +38,7 @@ def dhash(image, hash_size=128):
         logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
 
 
-def read_from_db(local_folder):
+def read_from_db(local_folder) -> list[str]: # ->
     path = local_folder + "\\" + 'images.db'
     #print(path)
     if os.path.isfile('images.db'):
@@ -50,14 +53,15 @@ def read_from_db(local_folder):
         return data
         # for row in data:
         #    print(row)
+
     else:
         print("File image.db Not Exists")
 
 
-def find_complete_duplicate_images(folder_path):
+def find_complete_duplicate_images(folder_path) -> None:
     # this function doesnt work very well because the images need to be completely identical and have the same hash.
     # Dictionary to store file hashes
-    hashes = {}
+    hashes: dict[str, str] = {}
     duplicates = {}
     try:
         for root, dirs, files in os.walk(folder_path):
@@ -90,6 +94,7 @@ def find_complete_duplicate_images(folder_path):
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
         logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
+
     #print("Duplicate Tuples", duplicates)
     folder_name = os.path.split(folder_path)
     # print(folder_name)
@@ -115,9 +120,10 @@ def find_complete_duplicate_images(folder_path):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-def find_near_duplicates(folder_path, threshold=5):
+def find_near_duplicates(folder_path) -> None:
     # Dictionary to store hash values and file paths
-    hashes = {}
+    threshold: int = 5
+    hashes: dict[str, str] = {}
     duplicates = []
     # Iterate through all files in the folder
     for root, dirs, files in os.walk(folder_path):
@@ -136,6 +142,11 @@ def find_near_duplicates(folder_path, threshold=5):
                         if abs(int(img_hash, 16) - int(h, 16)) <= threshold:
                             print(f"Near duplicate found: {file_path} and {path}")
                             duplicates.append(f"Near duplicate found: {file_path} and {path}")
+
+                            #call display images to check the pairs
+                            functions.display_img(file_path, path)
+
+
                             # call detele_image to delete only the second in each pair
                             #functions.delete_image(path)
                             #file = open('duplicates.txt', 'w')
@@ -144,7 +155,8 @@ def find_near_duplicates(folder_path, threshold=5):
                             break
                     hashes[img_hash] = file_path
     print(duplicates)
-    file = open('duplicates.txt', 'w')
+    new_file2 = "near_duplicates_" + folder_name[1] + ".txt"
+    file = open(new_file2, 'w')
     for items in duplicates:
         if len(items) > 1:
             file.write(items+"\n")
@@ -154,6 +166,8 @@ def find_near_duplicates(folder_path, threshold=5):
 #--------------------------------------------------------------------------------------------------------------------------
 #-------------------------------  End Definitions   -----------------------------------------------------------------------
 
+
+# when delete flag = true, delete the duplicate
 delete_flag = False
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
@@ -165,10 +179,12 @@ if __name__ == "__main__":
         files = os.listdir(fold)
         print("Current folder : ", fold)
         # call for all folders in Germany
-        find_complete_duplicate_images(fold)
+        #find_complete_duplicate_images(fold)
+        #find_near_duplicates(fold)
         #images_data = read_from_db(fold)
         #print(images_data)
         #print(os.getcwd())
+
 
 # when delete flag = true, delete the duplicate
 delete_flag = False
@@ -179,9 +195,9 @@ if __name__ == "__main__":
     #print("Current folder : ", fold)
     #print("Current folder : ", folder_path)
     folder_name = os.path.split(folder_path)
-    print(folder_name)
+    #print(folder_name)
     #find_complete_duplicate_images(folder_path)
-    #find_near_duplicates(folder_path)
+    find_near_duplicates(folder_path)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 

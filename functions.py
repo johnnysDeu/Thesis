@@ -1,24 +1,34 @@
 #import matplotlib
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 #import matplotlib.image as mpimg
 from PIL import Image
 import os, sys
 import logging
-
+from mpl_toolkits.axes_grid1 import ImageGrid
 
 logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 
-def print_img(image):
-    #img = mpimg.imread(image)
-    #imgplot = plt.imshow(img)
-    #plt.show()
+def display_img(image1, image2):
+    image1_dis = Image.open(image1)
+    new_image1 = image1_dis.resize((128, 128))
+    image2_dis = Image.open(image2)
+    new_image2 = image2_dis.resize((128, 128))
+    num_rows =1
+    fig, axes = plt.subplots(num_rows, 2, figsize=(10, 5 * num_rows))
+    grid = ImageGrid(fig, 111,  # similar to subplot(111)
+                     nrows_ncols=(1, 2),  # creates 2x2 grid of axes
+                     axes_pad=0.1,  # pad between axes in inch.
+                     )
+    for ax, im in zip(grid, [new_image1, new_image2]):
+        # Iterating over the grid returns the Axes.
+        ax.imshow(im)
 
-    image = Image.open(image)
-    image.show()
+    #image = Image.open(image1)
+    #image.show()
 
 
-def img_is_black_or_white(image_path):
+def img_is_black_or_white_old(image_path):
     threshold= 240
     with Image.open(image_path) as img:
         min_val, max_val = img.convert("L").getextrema()
