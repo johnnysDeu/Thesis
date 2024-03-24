@@ -7,7 +7,7 @@ from glob import glob
 
 # ctrl + / to comment out and reverse
 
-#logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
 logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 def read_from_db(local_folder):
@@ -53,7 +53,7 @@ def image_type_converter(image, folder_local):
 
 # we call a func to verify if all images were converted to jpg successfully
 
-# this is called after converter to delete all other images
+# this is called after converter to delete all other images, testing
 def delete_rest(folder_path):
     # delete whatever image doent have the word "new" in the name
     logging.info(f"Folder: {folder_path}")  # Log the deleted file name
@@ -86,6 +86,7 @@ for fold in list(subfolders):
     #print(images_data)
     #print(os.getcwd())
 
+
 # this is working
 counter = 0
 for files in os.listdir(fold):
@@ -103,5 +104,3 @@ folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_res
 images_data = read_from_db(folder_path)
 
 #delete_rest(fold)
-
-#change 20240319
