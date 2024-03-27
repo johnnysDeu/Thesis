@@ -7,6 +7,7 @@ import time
 # when delete flag = true, delete the duplicate
 # run this for all folders
 delete_flag = False
+log_flag = False
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
@@ -16,10 +17,10 @@ if __name__ == "__main__":
 
     for fold in list(subfolders):
         files = os.listdir(fold)
-        print("Current folder : ", fold)
+        #print("Current folder : ", fold)
         # call for all folders in Germany
         #Find_duplicates.find_complete_duplicate_images(fold, delete_flag)
-        Find_duplicates.find_near_duplicates(fold,delete_flag)
+        #Find_duplicates.find_near_duplicates(fold,delete_flag, log_flag)
         #images_data = read_from_db(fold)
         #print(images_data)
         #print(os.getcwd())
@@ -27,17 +28,18 @@ print("--- %s seconds ---" % (time.time() - start_time))
 
 # when delete flag = true, delete the duplicate
 delete_flag = False
+log_flag = True
 # run this for specific folder
 start_time = time.time()
 if __name__ == "__main__":
     #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
-    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1" #spiti
+    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1"  #spiti
     #print("Current folder : ", fold)
     #print("Current folder : ", folder_path)
     folder_name = os.path.split(folder_path)
     #print(folder_name)
     #Find_duplicates.find_complete_duplicate_images(folder_path)
-    #Find_duplicates.find_near_duplicates(folder_path, delete_flag)
+    Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
