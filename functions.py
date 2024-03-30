@@ -1,14 +1,14 @@
 #import matplotlib
-import matplotlib.pyplot as plt  # type: ignore
-#import matplotlib.image as mpimg
-from PIL import Image
-import os, sys
 import logging
-from mpl_toolkits.axes_grid1 import ImageGrid
-import numpy as np
-import cv2
+# import matplotlib.image as mpimg
+import os
+import sys
+
+import matplotlib.pyplot as plt  # type: ignore
+
 logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
+display_img_flag= False
 
 def display_img(image1, image2) ->None:
     image1_dis = Image.open(image1)
@@ -143,4 +143,6 @@ def identify_image_color(folder_path): #image_path
 def write_in_file(same_image, same_color):
     file = open('Same_Images.txt', 'a')
     file.write(same_color + same_image+"\n")
+    if display_img_flag:
+        display_img
     file.close()

@@ -2,7 +2,7 @@ import os, sys
 import Find_duplicates
 import display_images
 import time
-
+import functions
 
 # when delete flag = true, delete the duplicate
 # run this for all folders
@@ -33,13 +33,14 @@ log_flag = True
 start_time = time.time()
 if __name__ == "__main__":
     #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
-    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1"  #spiti
+    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_4"  #spiti
     #print("Current folder : ", fold)
     #print("Current folder : ", folder_path)
     folder_name = os.path.split(folder_path)
-    #print(folder_name)
+    print(folder_name)
     #Find_duplicates.find_complete_duplicate_images(folder_path)
     Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag)
+    #functions.identify_image_color(folder_path)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -66,4 +67,4 @@ if __name__ == "__main__":
 #Displaying similar images, testing
 if __name__ == "__main__":
     file_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\duplicates_folder_3.txt"
-    #display_images.(file_path)
+    #functions.display_images(file_path)
