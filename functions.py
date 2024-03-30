@@ -5,7 +5,8 @@ from PIL import Image
 import os, sys
 import logging
 from mpl_toolkits.axes_grid1 import ImageGrid
-
+import numpy as np
+import cv2
 logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 
@@ -94,3 +95,52 @@ def delete_image(file_path):
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
+
+
+from PIL import Image
+
+def identify_image_color(folder_path): #image_path
+
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                file_path = os.path.join(root, file_name)
+                # Open the image
+                img = Image.open(file_path)
+                # Get the dimensions of the image
+                width, height = img.size
+                # Get the pixel data
+                pixels = img.load()
+
+                # Check if all pixels are black (0, 0, 0)
+                is_all_black = all(pixels[x, y] == (0, 0, 0) for x in range(width) for y in range(height))
+                if is_all_black:
+                    img.close()
+                    print(f"All Black: {file_name}")
+                    write_in_file(file_name, f"{folder_path} All Black: ")
+
+                # Check if all pixels are white (255, 255, 255)
+                is_all_white = all(pixels[x, y] == (255, 255, 255) for x in range(width) for y in range(height))
+                if is_all_white:
+                    img.close()
+                    print(f"All White: {file_name}")
+                    write_in_file(file_name, f"{folder_path} All White: ")
+
+
+                # Check if all pixels have the same color
+                first_pixel_color = pixels[0, 0]
+                is_all_same_color = all(pixels[x, y] == first_pixel_color for x in range(width) for y in range(height))
+                if is_all_same_color:
+                    img.close()
+                    print(f"All Same Color: {file_name}")
+                    write_in_file(file_name, f"{folder_path} All Same color: ")
+
+                img.close()
+                # If none of the above conditions are met, the image has multiple colors
+                #print("Multiple Colors")
+
+
+def write_in_file(same_image, same_color):
+    file = open('Same_Images.txt', 'a')
+    file.write(same_color + same_image+"\n")
+    file.close()
