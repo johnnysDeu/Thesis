@@ -1,9 +1,8 @@
-import os, sys
-import Find_duplicates
-import display_images
+import os
 import time
+from tqdm import tqdm # too slow
 import functions
-
+from time import sleep
 # when delete flag = true, delete the duplicate
 # run this for all folders
 delete_flag = False
@@ -16,14 +15,14 @@ if __name__ == "__main__":
     # print(subfolders)
 
     for fold in list(subfolders):
+
         files = os.listdir(fold)
-        #print("Current folder : ", fold)
+        print("Current folder : ", fold)
         # call for all folders in Germany
         #Find_duplicates.find_complete_duplicate_images(fold, delete_flag)
         #Find_duplicates.find_near_duplicates(fold,delete_flag, log_flag)
         #images_data = read_from_db(fold)
-        #print(images_data)
-        #print(os.getcwd())
+        functions.identify_image_color(fold)
 print("--- %s seconds ---" % (time.time() - start_time))
 
 # when delete flag = true, delete the duplicate
@@ -32,15 +31,18 @@ log_flag = True
 # run this for specific folder
 start_time = time.time()
 if __name__ == "__main__":
-    #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
-    folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_4"  #spiti
-    #print("Current folder : ", fold)
-    #print("Current folder : ", folder_path)
-    folder_name = os.path.split(folder_path)
-    print(folder_name)
-    #Find_duplicates.find_complete_duplicate_images(folder_path)
-    Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag)
-    #functions.identify_image_color(folder_path)
+    #for i in tqdm(range(100)):
+        #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
+        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_3"  #spiti
+        #print("Current folder : ", fold)
+        #print("Current folder : ", folder_path)
+        folder_name = os.path.split(folder_path)
+        print(folder_name)
+        #Find_duplicates.find_complete_duplicate_images(folder_path)
+        #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag)
+        #functions.identify_image_color(folder_path)
+
+        #sleep(0.02)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
