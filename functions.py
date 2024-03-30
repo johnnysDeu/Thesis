@@ -1,5 +1,5 @@
 #import matplotlib
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 #import matplotlib.image as mpimg
 from PIL import Image
 import os, sys
@@ -10,23 +10,32 @@ import cv2
 logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 
-def display_img(image1, image2):
+def display_img(image1, image2) ->None:
     image1_dis = Image.open(image1)
-    new_image1 = image1_dis.resize((128, 128))
+    image_name1 = os.path.split(image1)
+    #new_image1 = image1_dis.resize((256, 256))
     image2_dis = Image.open(image2)
-    new_image2 = image2_dis.resize((128, 128))
-    num_rows =1
-    fig, axes = plt.subplots(num_rows, 2, figsize=(10, 5 * num_rows))
-    grid = ImageGrid(fig, 111,  # similar to subplot(111)
-                     nrows_ncols=(1, 2),  # creates 2x2 grid of axes
-                     axes_pad=0.1,  # pad between axes in inch.
-                     )
-    for ax, im in zip(grid, [new_image1, new_image2]):
-        # Iterating over the grid returns the Axes.
-        ax.imshow(im)
+    image_name2 = os.path.split(image2)
+    #new_image2 = image2_dis.resize((256, 256))
+    num_rows = 1
+    num_cols = 2
 
-    #image = Image.open(image1)
-    #image.show()
+    fig = plt.figure(figsize=(10, 7))
+
+    #fig, axes = plt.subplots(num_rows, num_cols)  #figsize=(10, 5 * num_rows)
+    fig.add_subplot(num_rows, num_cols, 1)
+    # showing image
+    plt.imshow(image1_dis)
+    plt.axis('off')
+    plt.title(image_name1[1])
+
+    # Adds a subplot at the 2nd position
+    fig.add_subplot(num_rows, 2, 2)
+    # showing image
+    plt.imshow(image2_dis)
+    plt.axis('off')
+    plt.title(image_name2[1])
+
 
 
 def img_is_black_or_white_old(image_path):

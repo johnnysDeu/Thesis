@@ -115,11 +115,10 @@ def find_complete_duplicate_images(folder_path, delete_flag) -> None:
 #--------------------------------------------------------------------------------------------------------------------------
 
 
-def find_near_duplicates(folder_path, delete_flag) -> None:
+def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
     '''
-        Function uses Hash algorithm to find complete near images.
-        It calulates the Hash for all images in a folder and stores the Hashes in a dictionary [Hash, Image].
-        If image with same hash if found, it is stored in the duplicates dictionary.
+        Function uses pHash algorithm to find complete near images.
+        pHash includes a
         If the "Delete_flag" is True, we call the delete_image() func to delete the duplicate.
         Finally it saves the detail of the duplicates in a TXT file for keeping history
         This function doesnt work very well because the images need to be completely identical and have the same hash.
@@ -155,14 +154,14 @@ def find_near_duplicates(folder_path, delete_flag) -> None:
                             duplicates.append(f"Near duplicate found: {file_path} and {path}")
 
                             #call display images to check the pairs
-                            #functions.display_img(file_path, path)
+                            functions.display_img(file_path, path)
 
 
                             # call detele_image to delete only the second in each pair
-                            #if delete_flag:
-                            #    print("Delete second Tuple:", path)
-                            #    # here we will call delete_image()
-                            #    functions.delete_image(path)
+                            if delete_flag:
+                               print("Delete second Tuple:", path)
+                               # here we will call delete_image()
+                               functions.delete_image(path)
                             #functions.delete_image(path)
                             #file = open('duplicates.txt', 'w')
                             #file.write(f"Near duplicate found: {file_path} and {path}\n")
@@ -170,13 +169,14 @@ def find_near_duplicates(folder_path, delete_flag) -> None:
                             break
                     hashes[img_hash] = file_path
     print(duplicates)
-    folder_name = os.path.split(folder_path)
-    new_file2 = "Near_duplicates_" + folder_name[1] + ".txt"
-    file = open(new_file2, 'w')
-    for items in duplicates:
-        if len(items) > 1:
-            file.write(items+"\n")
-    file.close()
+    if log_flag:
+        folder_name = os.path.split(folder_path)
+        new_file2 = "Near_duplicates_" + folder_name[1] + ".txt"
+        file = open(new_file2, 'w')
+        for items in duplicates:
+            if len(items) > 1:
+                file.write(items+"\n")
+        file.close()
 #--------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------
 #-------------------------------  End Definitions   -----------------------------------------------------------------------
