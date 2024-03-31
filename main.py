@@ -2,10 +2,11 @@ import os
 import time
 from tqdm import tqdm # too slow
 import functions
+import Find_duplicates
 from time import sleep
 # when delete flag = true, delete the duplicate
 # run this for all folders
-delete_flag = False
+delete_flag = True
 log_flag = False
 start_time = time.time()
 if __name__ == "__main__":
@@ -13,27 +14,26 @@ if __name__ == "__main__":
     Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
     # print(subfolders)
-
+    # call for all folders in Germany
     for fold in list(subfolders):
-
         files = os.listdir(fold)
         print("Current folder : ", fold)
-        # call for all folders in Germany
-        #Find_duplicates.find_complete_duplicate_images(fold, delete_flag)
-        #Find_duplicates.find_near_duplicates(fold,delete_flag, log_flag)
+        #Find_duplicates.find_complete_duplicate_images(fold, delete_flag) # about 8 min runtime
+        #Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag) # about 8 min runtime
         #images_data = read_from_db(fold)
-        functions.identify_image_color(fold)
+        #functions.identify_image_color(fold)   # about 5 min runtime
+print("Same color image Identification finished.")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 # when delete flag = true, delete the duplicate
 delete_flag = False
-log_flag = True
+log_flag = False
 # run this for specific folder
 start_time = time.time()
 if __name__ == "__main__":
     #for i in tqdm(range(100)):
         #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
-        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_3"  #spiti
+        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_63"  #spiti
         #print("Current folder : ", fold)
         #print("Current folder : ", folder_path)
         folder_name = os.path.split(folder_path)
