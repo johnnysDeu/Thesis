@@ -3,6 +3,9 @@ import logging
 # import matplotlib.image as mpimg
 import os
 import sys
+import sqlite3
+from pathlib import Path
+import shutil
 
 import matplotlib.pyplot as plt  # type: ignore
 
@@ -101,7 +104,7 @@ def delete_image(file_path):
 
 from PIL import Image
 
-def identify_image_color(folder_path): #image_path
+def identify_image_color(folder_path, delete_flag): #image_path
 
     for root, dirs, files in os.walk(folder_path):
         for file_name in files:
@@ -159,3 +162,78 @@ def write_in_file(same_image, same_color, file_path):
         dummy_img= r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\folder_1\iframe_7.png"
         display_img(file_path,dummy_img)
     file.close()
+
+
+def read_from_db(local_folder): # -> list[str]
+    path = local_folder + "\\" + 'images.db'
+
+    if os.path.isfile(path):
+        #print("Current Folder in function", os.getcwd())
+        conn = sqlite3.connect(path)
+        c = conn.cursor()
+        c.execute('SELECT file_name, is_ad FROM images')
+        data = c.fetchall()
+        # print(data)
+        c.close
+        conn.close()
+
+        #for row in data:
+        #    print(row)
+        return data
+    else:
+        print("File image.db or path Not Exists")
+
+
+def read_all_img_and_rename(folder_path : str) -> None:
+    # call to rename all images in a folder if they are Ads.
+    # new name = image_name_AD.png
+
+    #new_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Ads"
+
+    images_data = read_from_db(folder_path)
+    #print("Image Data", images_data)
+    for img in images_data:
+        if Path(img[0]).is_file():
+            if img[1] == '1':
+                print(img)
+                image_name = os.path.split(img[0])
+                print("Image name:", image_name[1])
+
+                name, ext = os.path.splitext(image_name[1])
+
+                abs_path = os.path.abspath(img[0])
+                print("Absolute path: ", abs_path)
+
+                new_abs_path = os.path.split(abs_path)
+                print(new_abs_path)
+                #print("target image: ", target_image)
+                # move image to Ads folder
+                try:
+                    # renaming
+                    new_name = f"{new_abs_path[0]}\\{name}_AD{ext}"
+                    print("New_name: ", new_name)
+                    #calling rename func.
+                    rename_img(abs_path, new_name)
+
+                    #target_image = f"{new_folder_path}\\{image_name[1]}"
+                    #print("Target_name:" , target_image)
+                    #shutil.move(abs_path, target_image) # move files
+                    # print(f"File {image_name[1]} moved to Ads.")
+                except Exception as e:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
+                    # logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
+
+                # Path(abs_path).rename(target_image)
+        else:
+            # in case we have deleted an image
+            continue
+
+
+# used to rename the images to ads or normal
+def rename_img(old_name: str, new_name: str) -> None:
+    os.rename(old_name, new_name)
+    print(f"old_name: {old_name} - new name: {new_name}")
+
+

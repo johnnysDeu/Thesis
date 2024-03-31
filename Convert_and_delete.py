@@ -10,24 +10,6 @@ from glob import glob
 
 logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
-def read_from_db(local_folder):
-    path = local_folder + "\\" + 'images.db'
-    #print(path)
-    if os.path.isfile('images.db'):
-        #print("Current Folder in function", os.getcwd())
-        conn = sqlite3.connect(path)
-        c = conn.cursor()
-        c.execute('SELECT file_name FROM images')
-        data = c.fetchall()
-        # print(data)
-        c.close
-        conn.close()
-        return data
-        # for row in data:
-        #    print(row)
-    else:
-        print("File image.db Not Exists")
-
 
 def image_type_converter(image, folder_local):
     try:
@@ -82,7 +64,7 @@ subfolders = [ f.path for f in os.scandir(Current_dir) if f.is_dir()]
 for fold in list(subfolders):
     files = os.listdir(fold)
     #print("Current folder : ", fold)
-    images_data = read_from_db(fold)
+    #images_data = read_from_db(fold)
     #print(images_data)
     #print(os.getcwd())
 
@@ -98,9 +80,5 @@ for files in os.listdir(fold):
     else:
         print(f"Skipped file: {files} (already in correct format)")
 print("counter: ", counter)
-
-#folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108" # douleia
-folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1" # spiti
-images_data = read_from_db(folder_path)
 
 #delete_rest(fold)

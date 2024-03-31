@@ -1,4 +1,4 @@
-import sqlite3
+
 import os, sys
 from PIL import Image
 from hashlib import md5
@@ -22,25 +22,6 @@ logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asc
 Image.LOAD_TRUNCATED_IMAGES = True
 
 #reading from the .db file
-def read_from_db(local_folder): # -> list[str]
-    path = local_folder + "\\" + 'images.db'
-
-    if os.path.isfile('images.db'):
-        #print("Current Folder in function", os.getcwd())
-        conn = sqlite3.connect(path)
-        c = conn.cursor()
-        c.execute('SELECT file_name FROM images')
-        data = c.fetchall()
-        # print(data)
-        c.close
-        conn.close()
-        return data
-        # for row in data:
-        #    print(row)
-
-    else:
-        print("File image.db Not Exists")
-
 
 def find_complete_duplicate_images(folder_path, delete_flag) -> None:
     '''
