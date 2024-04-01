@@ -6,6 +6,8 @@ import sys
 import sqlite3
 from pathlib import Path
 import shutil
+import cv2
+import numpy as np
 
 import matplotlib.pyplot as plt  # type: ignore
 
@@ -149,6 +151,10 @@ def identify_image_color(folder_path, delete_flag): #image_path
                         file_path = os.path.join(folder_path, file_name)
                         delete_image(file_path)
 
+                file_path = os.path.join(folder_path, file_name)
+                if is_mostly_same_color(file_path):
+                    print(f"All Same Color: {file_name}")
+
                 img.close()
                 # If none of the above conditions are met, the image has multiple colors
                 #print("Multiple Colors")
@@ -184,7 +190,7 @@ def read_from_db(local_folder): # -> list[str]
         print("File image.db or path Not Exists")
 
 
-def read_all_img_and_rename(folder_path : str) -> None:
+def read_all_img_and_rename(folder_path: str) -> None:
     # call to rename all images in a folder if they are Ads.
     # new name = image_name_AD.png
 
@@ -228,12 +234,40 @@ def read_all_img_and_rename(folder_path : str) -> None:
                 # Path(abs_path).rename(target_image)
         else:
             # in case we have deleted an image
+            print(f"Image: {Path(img[0])} not exist or renamed" )
             continue
 
 
 # used to rename the images to ads or normal
 def rename_img(old_name: str, new_name: str) -> None:
-    os.rename(old_name, new_name)
-    print(f"old_name: {old_name} - new name: {new_name}")
+    try:
+        os.rename(old_name, new_name)
+        print(f"old_name: {old_name} - new name: {new_name}")
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
 
 
+#
+def is_mostly_same_color(image_path, threshold=10) -> bool:
+    try:
+        # Load the image
+        image = cv2.imread(image_path)
+
+        # Convert the image to grayscale
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Calculate the standard deviation of pixel values
+        std_dev = np.std(gray_image)
+
+        # Check if standard deviation is below the threshold
+        if std_dev < threshold:
+            return True  # Mostly the same color
+        else:
+            return False  # Contains useful information
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]  # type: ignore
+        print("Error with image", image_path)
+        print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
