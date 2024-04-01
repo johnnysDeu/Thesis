@@ -1,4 +1,4 @@
-import sqlite3
+
 import os, sys
 from PIL import Image
 from hashlib import md5
@@ -22,25 +22,6 @@ logging.basicConfig(filename='exceptions.log', level=logging.INFO, format='%(asc
 Image.LOAD_TRUNCATED_IMAGES = True
 
 #reading from the .db file
-def read_from_db(local_folder): # -> list[str]
-    path = local_folder + "\\" + 'images.db'
-
-    if os.path.isfile('images.db'):
-        #print("Current Folder in function", os.getcwd())
-        conn = sqlite3.connect(path)
-        c = conn.cursor()
-        c.execute('SELECT file_name FROM images')
-        data = c.fetchall()
-        # print(data)
-        c.close
-        conn.close()
-        return data
-        # for row in data:
-        #    print(row)
-
-    else:
-        print("File image.db Not Exists")
-
 
 def find_complete_duplicate_images(folder_path, delete_flag) -> None:
     '''
@@ -117,13 +98,13 @@ def find_complete_duplicate_images(folder_path, delete_flag) -> None:
 
 def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
     '''
-        Function uses pHash algorithm to find complete near images.
-        pHash includes a
+        Function uses pHash algorithm to find near identical images.
+        pHash includes a hash comparison and if it is smaller than a threshold, then the images are considered near identical.
         If the "Delete_flag" is True, we call the delete_image() func to delete the duplicate.
-        Finally it saves the detail of the duplicates in a TXT file for keeping history
-        This function doesnt work very well because the images need to be completely identical and have the same hash.
-        We use this func together with the find_near_duplicates()
+        Finally, it saves the detail of the duplicates in a TXT file for keeping history
+        This function works very recognizing similar images that have slightly different resolution or size.
     '''
+
     # Dictionary to store hash values and file paths
     threshold: int = 5
     hashes: dict[str, str] = {}
@@ -154,8 +135,7 @@ def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
                             duplicates.append(f"Near duplicate found: {file_path} and {path}")
 
                             #call display images to check the pairs
-                            functions.display_img(file_path, path)
-
+                            #functions.display_img(file_path, path)
 
                             # call detele_image to delete only the second in each pair
                             if delete_flag:
