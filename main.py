@@ -1,6 +1,7 @@
 import time
 from tqdm import tqdm # too slow
 import functions
+import Convert_and_delete
 import os, sys
 from pathlib import Path
 import shutil
@@ -8,14 +9,14 @@ import Find_duplicates
 from time import sleep
 # when delete flag = true, delete the duplicate
 # run this for all folders
-delete_flag = True
+delete_flag = False
 log_flag = False
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
     Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
-    # print(subfolders)
+    #print(subfolders)
     # call for all folders in Germany
     for fold in list(subfolders):
         files = os.listdir(fold)
@@ -23,13 +24,13 @@ if __name__ == "__main__":
         #Find_duplicates.find_complete_duplicate_images(fold, delete_flag) # about 8 min runtime
         #Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag) # about 8 min runtime
         #images_data = read_from_db(fold)
-        #functions.identify_image_color(fold)   # about 5 min runtime
-print("Same color image Identification finished.")
+        #functions.identify_image_color(fold, delete_flag)   # about 5 min runtime
+        #functions.read_all_img_and_rename(fold)  # renaming images when ADs
+
+#print("Same color image Identification finished.")
 print("--- %s seconds ---" % (time.time() - start_time))
 
-# when delete flag = true, delete the duplicate
-delete_flag = False
-log_flag = False
+
 # run this for specific folder
 start_time = time.time()
 if __name__ == "__main__":
@@ -37,12 +38,13 @@ if __name__ == "__main__":
         #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\folder_108"# douleia
         folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2"  #spiti
         #print("Current folder : ", fold)
-        #print("Current folder : ", folder_path)
+        print("Current folder : ", folder_path)
         folder_name = os.path.split(folder_path)
-        print(folder_name)
+        #print(folder_name)
         #Find_duplicates.find_complete_duplicate_images(folder_path, delete_flag)
         #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag)
-        #functions.identify_image_color(folder_path, delete_flag)
+        #functions.identify_image_color(folder_path, delete_flag)                # this func has issue with .gif images. we need to convert all first
+        #functions.read_all_img_and_rename(folder_path) # renaming images when ADs
 
         #sleep(0.02)
 
@@ -75,7 +77,7 @@ if __name__ == "__main__":
 
 #Reading from DB file and moving ads to a folder
 if __name__ == "__main__":
-    folder_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\folder_2"
+    folder_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\folder_3"
     new_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\Ads"
     #half_path= r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis"
 
@@ -114,3 +116,13 @@ if __name__ == "__main__":
     #     else:
     #         # in case we have deleted an image
     #         continue
+
+
+#convert to JPEG
+counter = 0
+if __name__ == "__main__":
+    folder_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\folder_1"
+    print("Current folder : ", folder_path)
+    Convert_and_delete.image_type_converter(folder_path)
+    #Convert_and_delete.delete_rest(folder_path) # delete everything that is not .jpg and .db
+
