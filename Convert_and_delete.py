@@ -2,8 +2,8 @@ import sqlite3
 import os, sys
 from PIL import Image
 import logging
-# read .svg
-import pyvips  # type: ignore
+# read .svg # type: ignore
+#import pyvips
 from collections import Counter
 from glob import glob
 
@@ -46,7 +46,7 @@ def image_type_converter(folder_local):
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print("Exception details: ", exc_type, fname, exc_tb.tb_lineno)
         print(f"An exception occured: {e}")
-        #logging.info(f"Exception: {e}, {exc_tb.tb_lineno} , {image}")  # Log the deleted file name
+        logging.info(f"Exception: {e}, {exc_tb.tb_lineno} , {image}")  # Log the deleted file name
     print("counter: ", counter)
 # we call a func to verify if all images were converted to jpg successfully
 
@@ -83,17 +83,17 @@ for fold in list(subfolders):
     #print(images_data)
     #print(os.getcwd())
 
+if __name__ == "__main__":
+    # this is working
+    counter = 0
+    for files in os.listdir(fold):
+        if files.lower().endswith(('.png', '.bmp', '.tiff', '.gif')):
+            print(files)
+            print(fold)
+            counter += 1
+            #image_type_converter(files, fold)
+        else:
+            print(f"Skipped file: {files} (already in correct format)")
+    print("counter of skipped files: ", counter)
 
-# this is working
-counter = 0
-for files in os.listdir(fold):
-    if files.lower().endswith(('.png', '.bmp', '.tiff', '.gif')):
-        print(files)
-        print(fold)
-        counter += 1
-        #image_type_converter(files, fold)
-    else:
-        print(f"Skipped file: {files} (already in correct format)")
-print("counter: ", counter)
-
-#delete_rest(fold)
+    #delete_rest(fold)

@@ -10,6 +10,7 @@ from collections import Counter
 from glob import glob
 import functions
 import time
+import shutil
 
 
 # ctrl + / to comment out and reverse
@@ -96,7 +97,7 @@ def find_complete_duplicate_images(folder_path, delete_flag) -> None:
 #--------------------------------------------------------------------------------------------------------------------------
 
 
-def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
+def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) -> None:
     '''
         Function uses pHash algorithm to find near identical images.
         pHash includes a hash comparison and if it is smaller than a threshold, then the images are considered near identical.
@@ -104,6 +105,11 @@ def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
         Finally, it saves the detail of the duplicates in a TXT file for keeping history
         This function works very recognizing similar images that have slightly different resolution or size.
     '''
+
+    # making subfolder directory to copy there the duplicates.
+    if not os.path.isdir(f"{folder_path}\subfolder"):
+        os.makedirs(f'{folder_path}\subfolder')
+    target_dir = f"{folder_path}\subfolder"
 
     # Dictionary to store hash values and file paths
     threshold: int = 5
@@ -119,7 +125,7 @@ def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
                 # Open the image using Pillow
                 with Image.open(file_path) as img:
                     # image processing
-                    img = img.resize((128, 128), Image.ANTIALIAS)
+                    img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS)
                     img = img.convert('L')  # Convert to grayscale
 
                     # Calculate the perceptual hash of the image
@@ -137,7 +143,21 @@ def find_near_duplicates(folder_path, delete_flag, log_flag) -> None:
                             #call display images to check the pairs
                             #functions.display_img(file_path, path)
 
-                            # call detele_image to delete only the second in each pair
+                            # first to copy the near duplicates to a subfolder to review them.
+                            if copy_image_flag:
+                                try:
+                                    shutil.copy(file_path, target_dir)
+                                    print("Copying image 1:", file_name)
+                                except shutil.SameFileError:
+                                    pass
+                                try:
+                                    shutil.copy(path, target_dir)
+                                    print("Copying image 2:", path)
+                                except shutil.SameFileError:
+                                    pass
+                                # change
+
+                            #call detele_image to delete only the second in each pair
                             if delete_flag:
                                print("Delete second Tuple:", path)
                                # here we will call delete_image()

@@ -4,6 +4,8 @@ import numpy as np
 from skimage import io
 import os
 from os import listdir
+from PIL import ImageTk
+import tkinter as tk
 
 def load_images_from_file(file_path) : #-> list[tuple[str,str]]
     '''
@@ -56,6 +58,46 @@ def create_image_grid(image_pairs) -> None:
 
     plt.tight_layout()
     plt.show()
+
+
+def display_thumbnails(folder_path):
+    # Get a list of all files in the folder
+    file_list = os.listdir(folder_path)
+
+    # Create a Tkinter window
+    window = tk.Tk()
+    window.title("Image Thumbnails")
+
+    # Create a frame to hold the thumbnails
+    frame = tk.Frame(window)
+    frame.pack()
+
+    # Loop through the files in the folder
+    for filename in file_list:
+        # Check if the file is an image
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            # Open the image using PIL
+            image_path = os.path.join(folder_path, filename)
+            img = PImage.open(image_path)
+
+            # Resize the image to create a thumbnail
+            img.thumbnail((100, 100))
+
+            # Convert the image to a Tkinter PhotoImage
+            img_tk = ImageTk.PhotoImage(img)
+
+            # Create a label to display the thumbnail
+            label = tk.Label(frame, image=img_tk)
+            label.pack(side=tk.LEFT, padx=10, pady=10)
+
+            # Keep a reference to the PhotoImage object to prevent it from being garbage collected
+            label.img = img_tk
+
+    # Start the Tkinter main loop
+    window.mainloop()
+
+
+###___________________ End Def _______________________________________________________
 
 
 def loadImages(path):
