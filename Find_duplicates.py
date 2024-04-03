@@ -10,6 +10,7 @@ from collections import Counter
 from glob import glob
 import functions
 import time
+import shutil
 
 
 # ctrl + / to comment out and reverse
@@ -105,9 +106,10 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
         This function works very recognizing similar images that have slightly different resolution or size.
     '''
 
-    # making subfolder directory to copy there duplicates.
-    subfolder= os.makedirs(f'{folder_path}/subfolder/')
-
+    # making subfolder directory to copy there the duplicates.
+    if not os.path.isdir(f"{folder_path}\subfolder"):
+        os.makedirs(f'{folder_path}\subfolder')
+    target_dir = f"{folder_path}\subfolder"
 
     # Dictionary to store hash values and file paths
     threshold: int = 5
@@ -123,7 +125,7 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
                 # Open the image using Pillow
                 with Image.open(file_path) as img:
                     # image processing
-                    img = img.resize((128, 128), Image.ANTIALIAS)
+                    img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS)
                     img = img.convert('L')  # Convert to grayscale
 
                     # Calculate the perceptual hash of the image
@@ -143,7 +145,17 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
 
                             # first to copy the near duplicates to a subfolder to review them.
                             if copy_image_flag:
-                                print("Moving image:", file_name)
+                                try:
+                                    shutil.copy(file_path, target_dir)
+                                    print("Copying image 1:", file_name)
+                                except shutil.SameFileError:
+                                    pass
+                                try:
+                                    shutil.copy(path, target_dir)
+                                    print("Copying image 2:", path)
+                                except shutil.SameFileError:
+                                    pass
+                                # change
 
                             #call detele_image to delete only the second in each pair
                             if delete_flag:
