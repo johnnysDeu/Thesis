@@ -45,43 +45,43 @@ def display_img(image1, image2) ->None:
 
 
 
-def img_is_black_or_white_old(image_path):
-    threshold= 240
-    with Image.open(image_path) as img:
-        min_val, max_val = img.convert("L").getextrema()
-        print(min_val)
-        if min_val >= threshold or max_val <= threshold: # full black means: max_val=0 and min_val=0
-            return True # True means either black or white
-        else:
-            return False
+# def img_is_black_or_white_old(image_path):
+#     threshold= 240
+#     with Image.open(image_path) as img:
+#         min_val, max_val = img.convert("L").getextrema()
+#         print(min_val)
+#         if min_val >= threshold or max_val <= threshold: # full black means: max_val=0 and min_val=0
+#             return True # True means either black or white
+#         else:
+#             return False
 
 
-def img_is_black_or_white(folder_path):
-    black_and_white = []
-
-    for root, dirs, files in os.walk(folder_path):
-        for file_name in files:
-            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
-                file_path = os.path.join(root, file_name)
-                threshold= 240
-                with Image.open(file_path) as img:
-                    min_val, max_val = img.convert("L").getextrema() #convert("L").
-                    im_extr = img.getextrema()
-                    print("Single values extrema", im_extr)
-                    print("Image name: ", file_path)
-                    print(f"Min val: {min_val}, Max val: {max_val}")
-                    if min_val >= threshold or max_val <= threshold: # full black means: max_val=0 and min_val=0
-                        black_and_white.append(f"Black or white image: {file_path}")
-                        #return True # True means either black or white
-                    #else:
-                        #return False
-
-    print(black_and_white)
-    file = open('black_and_white.txt', 'w')
-    for items in black_and_white:
-        if len(items) > 1:
-            file.write(items + "\n")
-    file.close()
+# def img_is_black_or_white(folder_path):
+#     black_and_white = []
+#
+#     for root, dirs, files in os.walk(folder_path):
+#         for file_name in files:
+#             if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+#                 file_path = os.path.join(root, file_name)
+#                 threshold= 240
+#                 with Image.open(file_path) as img:
+#                     min_val, max_val = img.convert("L").getextrema() #convert("L").
+#                     im_extr = img.getextrema()
+#                     print("Single values extrema", im_extr)
+#                     print("Image name: ", file_path)
+#                     print(f"Min val: {min_val}, Max val: {max_val}")
+#                     if min_val >= threshold or max_val <= threshold: # full black means: max_val=0 and min_val=0
+#                         black_and_white.append(f"Black or white image: {file_path}")
+#                         #return True # True means either black or white
+#                     #else:
+#                         #return False
+#
+#     print(black_and_white)
+#     file = open('black_and_white.txt', 'w')
+#     for items in black_and_white:
+#         if len(items) > 1:
+#             file.write(items + "\n")
+#     file.close()
 
 
 def delete_image(file_path):
@@ -200,18 +200,19 @@ def read_all_img_and_rename(folder_path: str) -> None:
     #print("Image Data", images_data)
     for img in images_data:
         if Path(img[0]).is_file():
-            if img[1] == '1':
-                print(img)
+            #print("Path Img[0]:", Path(img[0]))
+            if img[1] == '1':  # is an AD
+                #print(img)
                 image_name = os.path.split(img[0])
-                print("Image name:", image_name[1])
+                #print("Image name:", image_name[1])
 
                 name, ext = os.path.splitext(image_name[1])
 
                 abs_path = os.path.abspath(img[0])
-                print("Absolute path: ", abs_path)
+                #print("Absolute path: ", abs_path)
 
                 new_abs_path = os.path.split(abs_path)
-                print(new_abs_path)
+                #print(new_abs_path)
                 #print("target image: ", target_image)
                 # move image to Ads folder
                 try:
@@ -234,7 +235,7 @@ def read_all_img_and_rename(folder_path: str) -> None:
                 # Path(abs_path).rename(target_image)
         else:
             # in case we have deleted an image
-            print(f"Image: {Path(img[0])} not exist or renamed" )
+            print(f"Image: {Path(img[0])} with flag : {img[1]}, not exist or renamed" )
             continue
 
 
@@ -250,7 +251,7 @@ def rename_img(old_name: str, new_name: str) -> None:
 
 
 #
-def is_mostly_same_color(image_path, threshold=10) -> bool:
+def is_mostly_same_color(image_path, threshold=10):
     try:
         # Load the image
         image = cv2.imread(image_path)
@@ -280,3 +281,22 @@ def delete_subfolder(folder_path: str) ->None:
     if os.path.exists(full_path):
         shutil.rmtree(full_path)
         print("Deleted folder:", full_path)
+
+
+def move_ads_and_img(folder_path: str) ->None:
+
+    target_dir = os.getcwd()
+    target_dir=f"{target_dir}\Ads"
+    print("Target Dir", target_dir)
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            # Check if the file is an image
+            if file_name.lower().endswith('.jpg'):
+                if "AD" in file_name:    # get all Ads
+                    file_path = os.path.join(root, file_name)
+                    try:
+                        shutil.copy(file_path, target_dir)
+                        #shutil.move(file_path, target_dir) # move files
+                        print("Copying image:", file_name)
+                    except shutil.SameFileError:
+                        pass
