@@ -1,4 +1,3 @@
-
 import os, sys
 from PIL import Image
 from hashlib import md5
@@ -24,7 +23,7 @@ Image.LOAD_TRUNCATED_IMAGES = True
 
 #reading from the .db file
 
-def find_complete_duplicate_images(folder_path, delete_flag) -> None:
+def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> None:
     '''
     Function uses Hash algorithm to find complete duplicate images.
     It calulates the Hash for all images in a folder and stores the Hashes in a dictionary [Hash, Image].
@@ -73,25 +72,26 @@ def find_complete_duplicate_images(folder_path, delete_flag) -> None:
 
     ### storing the findings in a TXT file
     #print("Duplicate Tuples", duplicates)
-    folder_name = os.path.split(folder_path)
-    # print(folder_name)
-    new_file = "complete_duplicates_" + folder_name[1] + ".txt"
+    if log_flag:
+        folder_name = os.path.split(folder_path)
+        # print(folder_name)
+        new_file = "complete_duplicates_" + folder_name[1] + ".txt"
     #display all duplicate images
     for img_hash, files in duplicates.items():
         if len(files) > 1:
-            #file = open('duplicates.txt', 'w')
-            file = open(new_file, 'a') # append mode, to avoid overwriting
-            file.write(f"Duplicate images with hash {img_hash}:\n")
+            if log_flag:
+                file = open(new_file, 'a') # append mode, to avoid overwriting
+                file.write(f"Duplicate images with hash {img_hash}:\n")
             #print(f"Duplicate images with hash {img_hash}:")
             file_cnt = 0
             for file_path in files:
-                #print(f"- {file_path}")
-                file.write(f"- {file_path}\n")
+                if log_flag:
+                    file.write(f"- {file_path}\n")
                 if file_cnt >= 1:
                     if delete_flag:
                         print("Delete second Tuple:", file_path)
                         # here we will call delete_image()
-                        #functions.delete_image(file_path)
+                        functions.delete_image(file_path)
                 file_cnt = file_cnt + 1
             file.close()
 #--------------------------------------------------------------------------------------------------------------------------
@@ -147,12 +147,12 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
                             if copy_image_flag:
                                 try:
                                     shutil.copy(file_path, target_dir)
-                                    print("Copying image 1:", file_name)
+                                    #print("Copying image 1:", file_name)
                                 except shutil.SameFileError:
                                     pass
                                 try:
                                     shutil.copy(path, target_dir)
-                                    print("Copying image 2:", path)
+                                    #print("Copying image 2:", path)
                                 except shutil.SameFileError:
                                     pass
                                 # change

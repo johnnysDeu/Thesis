@@ -20,19 +20,27 @@ copy_image_flag = True
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
-    #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
-    Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
+    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
+    #Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
     #print(subfolders)
     # call for all folders in Germany
     for fold in list(subfolders):
         files = os.listdir(fold)
-        #print("Current folder : ", fold)
-        #Find_duplicates.find_complete_duplicate_images(fold, delete_flag) # about 8 min runtime
-        #Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag) # about 8 min runtime
+        print("Current folder : ", fold)
+
+        #functions.identify_image_color(fold, delete_flag)  # about 8-12 min runtime , First to run
+        #Find_duplicates.find_complete_duplicate_images(fold, delete_flag, log_flag) # about 8 min runtime
+        #Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
         #images_data = read_from_db(fold)
-        #functions.identify_image_color(fold, delete_flag)   # about 5 min runtime
+
         #functions.read_all_img_and_rename(fold)  # renaming images when ADs
+
+        #Convert_and_delete.image_type_converter(fold)
+        #Convert_and_delete.delete_rest(fold)
+
+        # delete all "subfolder" folders
+        #functions.delete_subfolder(fold)
 
 #print("Same color image Identification finished.")
 print("--- %s seconds ---" % (time.time() - start_time))
@@ -42,13 +50,15 @@ print("--- %s seconds ---" % (time.time() - start_time))
 start_time = time.time()
 if __name__ == "__main__":
     #for i in tqdm(range(100)):
-        folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_101"# douleia
-        #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2"  #spiti
+        #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_2"# douleia
+        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_94"  #spiti
         #print("Current folder : ", fold)
         print("Current folder : ", folder_path)
         folder_name = os.path.split(folder_path)
+        #functions.delete_subfolder(folder_path)
         #print(folder_name)
-        Find_duplicates.find_complete_duplicate_images(folder_path, delete_flag, copy_image_flag)
+        #Find_duplicates.find_complete_duplicate_images(folder_path, delete_flag, copy_image_flag)
+        Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag, copy_image_flag)
         #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)
         #functions.identify_image_color(folder_path, delete_flag)                # this func has issue with .gif images. we need to convert all first
         #functions.read_all_img_and_rename(folder_path) # renaming images when ADs
@@ -129,13 +139,13 @@ if __name__ == "__main__":
 #convert to JPEG
 counter = 0
 if __name__ == "__main__":
-    #folder_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\folder_1"
-    folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany\folder_1" # douleia
+    folder_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Crawler_results_Germany\folder_2"
+    #folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany\folder_1" # douleia
     print("Current folder : ", folder_path)
     #Convert_and_delete.image_type_converter(folder_path)
     #Convert_and_delete.delete_rest(folder_path) # delete everything that is not .jpg and .db
 
 if __name__ == "__main__":
-    print("Running Display image as Thumbnail")
+    #print("Running Display image as Thumbnail")
     folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany\folder_109"  # douleia
     #display_images.display_thumbnails(folder_path)

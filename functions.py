@@ -271,3 +271,12 @@ def is_mostly_same_color(image_path, threshold=10) -> bool:
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]  # type: ignore
         print("Error with image", image_path)
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
+
+
+def delete_subfolder(folder_path: str) ->None:
+    print("Current folder to be deleted:",folder_path)
+    full_path= f"{folder_path}\\subfolder"
+    print("Full Path:",full_path)
+    if os.path.exists(full_path):
+        shutil.rmtree(full_path)
+        print("Deleted folder:", full_path)
