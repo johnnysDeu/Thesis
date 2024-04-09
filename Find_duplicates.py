@@ -93,7 +93,8 @@ def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> None:
                         # here we will call delete_image()
                         functions.delete_image(file_path)
                 file_cnt = file_cnt + 1
-            file.close()
+                if log_flag:
+                    file.close()
 #--------------------------------------------------------------------------------------------------------------------------
 
 
