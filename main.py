@@ -7,7 +7,7 @@ from pathlib import Path
 import shutil
 import Find_duplicates
 from time import sleep
-
+import importlib.util
 
 
 # when delete flag = true, delete the duplicate
@@ -20,10 +20,10 @@ copy_image_flag = False
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
-    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
+    #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus"
-    #Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
+    Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
     #print(subfolders)
     # call for all folders in Germany
@@ -58,11 +58,14 @@ print("--- %s seconds ---" % (time.time() - start_time))
 start_time = time.time()
 if __name__ == "__main__":
     #for i in tqdm(range(100)):
-        #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_2"# douleia
+        folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_10"# douleia
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2"  #spiti
-        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Ads"
+        #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Ads"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus\\folder_2"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain\\folder_2"
+
+        folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Sample_images" # douleia
+
 
         #print("Current folder : ", fold)
         print("Current folder : ", folder_path)
@@ -71,8 +74,8 @@ if __name__ == "__main__":
 
         #functions.delete_subfolder(folder_path)
         #print(folder_name)
-        Find_duplicates.find_complete_duplicate_images(folder_path, delete_flag, log_flag) # about 8 min runtime
-        Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
+        #Find_duplicates.find_complete_duplicate_images(folder_path, delete_flag, log_flag) # about 8 min runtime
+        #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
         #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)
         #functions.identify_image_color(folder_path, delete_flag)                # this func has issue with .gif images. we need to convert all first
         #functions.read_all_img_and_rename(folder_path) # renaming images when ADs
@@ -127,6 +130,16 @@ if __name__ == "__main__":
     #functions.move_ads_and_img(folder_path)
 
 if __name__ == "__main__":
-    #print("Running Display image as Thumbnail")
-    folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany\folder_2"  # douleia
-    #display_images.display_thumbnails(folder_path)
+    # For illustrative purposes.
+    name = 'keras'
+
+    if name in sys.modules:
+        print(f"{name!r} already in sys.modules")
+    elif (spec := importlib.util.find_spec(name)) is not None:
+        # If you choose to perform the actual import ...
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
+        print(f"{name!r} has been imported")
+    else:
+        print(f"can't find the {name!r} module")

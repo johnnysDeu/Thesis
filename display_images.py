@@ -1,7 +1,7 @@
 from PIL import Image as PImage
 import matplotlib.pyplot as plt
 import numpy as np
-from skimage import io
+#from skimage import io
 import os
 from os import listdir
 from PIL import ImageTk

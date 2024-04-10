@@ -218,7 +218,7 @@ def read_all_img_and_rename(folder_path: str) -> None:
                 try:
                     # renaming
                     new_name = f"{new_abs_path[0]}\\{name}_AD{ext}"
-                    print("New_name: ", new_name)
+                    #print("New_name: ", new_name)
                     #calling rename func.
                     rename_img(abs_path, new_name)
 
