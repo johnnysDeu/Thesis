@@ -20,10 +20,10 @@ copy_image_flag = False
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
-    #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
+    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus"
-    Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
+    #Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
     #print(subfolders)
     # call for all folders in Germany
@@ -129,9 +129,10 @@ if __name__ == "__main__":
     #Convert_and_delete.delete_rest(folder_path) # delete everything that is not .jpg and .db
     #functions.move_ads_and_img(folder_path)
 
+
 if __name__ == "__main__":
     # For illustrative purposes.
-    name = 'keras'
+    name = 'tensorflow'
 
     if name in sys.modules:
         print(f"{name!r} already in sys.modules")
