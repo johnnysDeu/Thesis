@@ -20,10 +20,10 @@ copy_image_flag = False
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
-    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
+    #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus"
-    #Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
+    Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
     #print(subfolders)
     # call for all folders in Germany
@@ -31,8 +31,8 @@ if __name__ == "__main__":
         files = os.listdir(fold)
         print("Current folder : ", fold)
         # better mark all ADs first
-        #functions.read_all_img_and_rename(fold)  # renaming images when ADs
-        #functions.move_ads_and_img(fold)  # testing how many adds exist
+        #functions.read_all_img_and_rename(fold)  # renaming images when ADs and
+        functions.move_ads_and_img(fold)  # testing how many adds exist
 
 
         #functions.identify_image_color(fold, delete_flag)  # 1. about 8-12 min runtime , First to run
@@ -58,13 +58,13 @@ print("--- %s seconds ---" % (time.time() - start_time))
 start_time = time.time()
 if __name__ == "__main__":
     #for i in tqdm(range(100)):
-        folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_10"# douleia
+        folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_5"# douleia
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2"  #spiti
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Ads"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus\\folder_2"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain\\folder_2"
 
-        folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Sample_images" # douleia
+        #folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Sample_images" # douleia
 
 
         #print("Current folder : ", fold)

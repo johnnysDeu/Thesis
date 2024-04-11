@@ -44,46 +44,6 @@ def display_img(image1, image2) ->None:
     plt.title(image_name2[1])
 
 
-
-# def img_is_black_or_white_old(image_path):
-#     threshold= 240
-#     with Image.open(image_path) as img:
-#         min_val, max_val = img.convert("L").getextrema()
-#         print(min_val)
-#         if min_val >= threshold or max_val <= threshold: # full black means: max_val=0 and min_val=0
-#             return True # True means either black or white
-#         else:
-#             return False
-
-
-# def img_is_black_or_white(folder_path):
-#     black_and_white = []
-#
-#     for root, dirs, files in os.walk(folder_path):
-#         for file_name in files:
-#             if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
-#                 file_path = os.path.join(root, file_name)
-#                 threshold= 240
-#                 with Image.open(file_path) as img:
-#                     min_val, max_val = img.convert("L").getextrema() #convert("L").
-#                     im_extr = img.getextrema()
-#                     print("Single values extrema", im_extr)
-#                     print("Image name: ", file_path)
-#                     print(f"Min val: {min_val}, Max val: {max_val}")
-#                     if min_val >= threshold or max_val <= threshold: # full black means: max_val=0 and min_val=0
-#                         black_and_white.append(f"Black or white image: {file_path}")
-#                         #return True # True means either black or white
-#                     #else:
-#                         #return False
-#
-#     print(black_and_white)
-#     file = open('black_and_white.txt', 'w')
-#     for items in black_and_white:
-#         if len(items) > 1:
-#             file.write(items + "\n")
-#     file.close()
-
-
 def delete_image(file_path):
 
     logging.info(f"Folder: {file_path}")  # Log the deleted file name
@@ -193,8 +153,10 @@ def read_from_db(local_folder): # -> list[str]
 def read_all_img_and_rename(folder_path: str) -> None:
     # call to rename all images in a folder if they are Ads.
     # new name = image_name_AD.png
+    # new name2 = folder_1_image_name_AD.png
 
-    #new_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Ads"
+    folder_name = os.path.split(folder_path)
+    print("Folder name:", folder_name)
 
     images_data = read_from_db(folder_path)
     #print("Image Data", images_data)
@@ -212,27 +174,41 @@ def read_all_img_and_rename(folder_path: str) -> None:
                 #print("Absolute path: ", abs_path)
 
                 new_abs_path = os.path.split(abs_path)
-                #print(new_abs_path)
-                #print("target image: ", target_image)
-                # move image to Ads folder
+
                 try:
-                    # renaming
-                    new_name = f"{new_abs_path[0]}\\{name}_AD{ext}"
-                    #print("New_name: ", new_name)
+                    # renaming if Ad
+                    new_name = f"{new_abs_path[0]}\\{folder_name[1]}_{name}_AD{ext}"  # folder_1_image_AD.jpg
+                    #new_name2 = f"{folder_name[1]}_{new_name}"
+                    print("New_name: ", new_name)
                     #calling rename func.
                     rename_img(abs_path, new_name)
 
-                    #target_image = f"{new_folder_path}\\{image_name[1]}"
-                    #print("Target_name:" , target_image)
-                    #shutil.move(abs_path, target_image) # move files
-                    # print(f"File {image_name[1]} moved to Ads.")
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                     print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
                     # logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
 
-                # Path(abs_path).rename(target_image)
+            elif img[1] == '0':  # is simple image
+                image_name = os.path.split(img[0]) # image name = image_name[1]
+                name, ext = os.path.splitext(image_name[1]) # split name + extention
+
+                abs_path = os.path.abspath(img[0])
+
+                new_abs_path = os.path.split(abs_path)
+                try:
+                    # renaming if simple image
+                    new_name = f"{new_abs_path[0]}\\{folder_name[1]}_{name}{ext}"
+                    #new_name = f"{folder_name[1]}_{name}{ext}"  # folder_1_image.jpg
+                    print("New_name: ", new_name)
+                    #calling rename func.
+                    rename_img(abs_path, new_name)
+                except Exception as e:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
+                    # logging.info(f"Exception: {e}, {exc_tb.tb_lineno}")  # Log the exception
+
         else:
             # in case we have deleted an image
             print(f"Image: {Path(img[0])} with flag : {img[1]}, not exist or renamed" )
