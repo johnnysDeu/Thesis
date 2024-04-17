@@ -8,8 +8,10 @@ from pathlib import Path
 import shutil
 import cv2
 import numpy as np
-
 import matplotlib.pyplot as plt  # type: ignore
+from PIL import Image as PImage
+from PIL import ImageTk
+import tkinter as tk
 
 logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
@@ -276,3 +278,29 @@ def move_ads_and_img(folder_path: str) ->None:
                         print("Copying image:", file_name)
                     except shutil.SameFileError:
                         pass
+
+
+
+def resize_image(folder_path: str, new_size=(224, 224)) -> None:
+
+    folder_name = os.path.split(folder_path)
+    print("Folder name:", folder_name)
+    #try:
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                with Image.open(os.path.join(folder_path, file_name)) as img:
+                #image_path = os.path.join(folder_path, file_name)
+                    #img_tmp = PImage.open(img)
+
+                    img = img.resize(new_size, Image.ANTIALIAS)
+
+                    img.save(os.path.join(folder_path, file_name))
+
+
+    print(f"Resizing finished for folder : {folder_name}")
+    #except Exception as e:
+    #    exc_type, exc_obj, exc_tb = sys.exc_info()
+    #    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]  # type: ignore
+    #    print("Error with image", image_path)
+    #    print(f"An error occurred: {e}, {exc_tb.tb_lineno}")

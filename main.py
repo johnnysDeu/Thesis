@@ -20,10 +20,14 @@ copy_image_flag = False
 start_time = time.time()
 if __name__ == "__main__":
     # Current_dir = os.getcwd()
-    Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
+    #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain"
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus"
     #Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
+
+    Current_dir = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\data"
+   
+
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
     #print(subfolders)
     # call for all folders in Germany
@@ -31,7 +35,7 @@ if __name__ == "__main__":
         files = os.listdir(fold)
         print("Current folder : ", fold)
         # better mark all ADs first
-        functions.read_all_img_and_rename(fold)  # renaming images when ADs and
+        #functions.read_all_img_and_rename(fold)  # renaming images when ADs and
         #functions.move_ads_and_img(fold)  # testing how many adds exist
 
 
@@ -44,11 +48,15 @@ if __name__ == "__main__":
         #Convert_and_delete.image_type_converter(fold)
         #Convert_and_delete.delete_rest(fold) # delete all Not JPEG
 
-        # delete all "subfolder" folders
+
+
+        #delete all "subfolder" folders
         #functions.delete_subfolder(fold)
 
         #move ads to Ads folder
         #functions.move_ads_and_img(fold)
+
+        functions.resize_image(fold)
 
 #print("Same color image Identification finished.")
 print("--- %s seconds ---" % (time.time() - start_time))
@@ -59,7 +67,7 @@ start_time = time.time()
 if __name__ == "__main__":
     #for i in tqdm(range(100)):
         #folder_path = "C:\\Users\\doitsinis\\PycharmProjects\\Thesis\\Crawler_results_Germany\\folder_5"# douleia
-        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_2"  #spiti
+        folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Germany\\folder_1"  #spiti
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Ads"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus\\folder_2"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain\\folder_2"
@@ -79,6 +87,8 @@ if __name__ == "__main__":
         #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)
         #functions.identify_image_color(folder_path, delete_flag)                # this func has issue with .gif images. we need to convert all first
         #functions.read_all_img_and_rename(folder_path) # renaming images when ADs
+
+        #functions.resize_image(folder_path)
 
         #sleep(0.02)
 
@@ -129,6 +139,6 @@ if __name__ == "__main__":
         module = importlib.util.module_from_spec(spec)
         sys.modules[name] = module
         spec.loader.exec_module(module)
-        print(f"{name!r} has been imported")
+       # print(f"{name!r} has been imported")
     else:
         print(f"can't find the {name!r} module")
