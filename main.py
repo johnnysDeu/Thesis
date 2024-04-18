@@ -12,7 +12,7 @@ import importlib.util
 
 # when delete flag = true, delete the duplicate
 # run this for all folders
-delete_flag = False
+delete_flag = True
 log_flag = False
 copy_image_flag = False
 
@@ -25,7 +25,8 @@ if __name__ == "__main__":
     #Current_dir = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus"
     #Current_dir = r"C:\Users\doitsinis\PycharmProjects\Thesis\Crawler_results_Germany"
 
-    Current_dir = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\data"
+    Current_dir = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Germany_iFramesOnly"
+    #Current_dir= r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\Ads"
    
 
     subfolders = [f.path for f in os.scandir(Current_dir) if f.is_dir()]
@@ -35,28 +36,28 @@ if __name__ == "__main__":
         files = os.listdir(fold)
         print("Current folder : ", fold)
         # better mark all ADs first
-        #functions.read_all_img_and_rename(fold)  # renaming images when ADs and
+        functions.read_all_img_and_rename(fold)  # renaming images when ADs and
         #functions.move_ads_and_img(fold)  # testing how many adds exist
 
 
         #functions.identify_image_color(fold, delete_flag)  # 1. about 8-12 min runtime , First to run
         #Convert_and_delete.image_type_converter(fold) # 2. run to remove .gif
+        #Convert_and_delete.delete_rest(fold) # delete all Not JPEG
+
 
         #Find_duplicates.find_complete_duplicate_images(fold, delete_flag, log_flag) # about 8 min runtime
         #Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
-
-        #Convert_and_delete.image_type_converter(fold)
-        #Convert_and_delete.delete_rest(fold) # delete all Not JPEG
-
 
 
         #delete all "subfolder" folders
         #functions.delete_subfolder(fold)
 
-        #move ads to Ads folder
-        #functions.move_ads_and_img(fold)
+        #functions.resize_image(fold)
 
-        functions.resize_image(fold)
+        #move ads to Ads folder
+        functions.move_ads_and_img(fold)
+
+
 
 #print("Same color image Identification finished.")
 print("--- %s seconds ---" % (time.time() - start_time))

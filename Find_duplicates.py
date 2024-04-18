@@ -46,7 +46,7 @@ def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> None:
                     with Image.open(file_path) as img:
                         img_initial=img #for debugging
                         # Resize the image to reduce hash computation time
-                        img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS) # optional resizing
+                        #img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS) # optional resizing, error here
                         # Convert image to grayscale
                         img = img.convert('L')
                         #print(img)
@@ -126,7 +126,7 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
                 # Open the image using Pillow
                 with Image.open(file_path) as img:
                     # image processing
-                    img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS)
+                    #img = img.resize((128, 128), PIL.Image.Resampling.LANCZOS) # optional
                     img = img.convert('L')  # Convert to grayscale
 
                     # Calculate the perceptual hash of the image

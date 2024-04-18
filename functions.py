@@ -160,6 +160,9 @@ def read_all_img_and_rename(folder_path: str) -> None:
     folder_name = os.path.split(folder_path)
     print("Folder name:", folder_name)
 
+    rest_path = folder_name[0]
+    country_name = os.path.split(rest_path)
+
     images_data = read_from_db(folder_path)
     #print("Image Data", images_data)
     for img in images_data:
@@ -177,9 +180,17 @@ def read_all_img_and_rename(folder_path: str) -> None:
 
                 new_abs_path = os.path.split(abs_path)
 
+                if "Ger" in country_name[1]:
+                    country_ind = "_G"
+                elif "Spa" in country_name[1]:
+                    country_ind = "_S"
+                elif "Cy" in country_name[1]:
+                    country_ind = "_C"
+
                 try:
                     # renaming if Ad
-                    new_name = f"{new_abs_path[0]}\\{folder_name[1]}_{name}_AD{ext}"  # folder_1_image_AD.jpg
+                    # Adding manualy G for Germany, S for spain and C for cyprus
+                    new_name = f"{new_abs_path[0]}\\{folder_name[1]}{country_ind}_{name}_AD{ext}"  # folder_1_image_AD.jpg
                     #new_name2 = f"{folder_name[1]}_{new_name}"
                     print("New_name: ", new_name)
                     #calling rename func.
@@ -198,9 +209,17 @@ def read_all_img_and_rename(folder_path: str) -> None:
                 abs_path = os.path.abspath(img[0])
 
                 new_abs_path = os.path.split(abs_path)
+
+                if "Ger" in country_name[1]:
+                    country_ind_Ad = "_G"
+                elif "Spa" in country_name[1]:
+                    country_ind_Ad = "_S"
+                elif "Cy" in country_name[1]:
+                    country_ind_Ad = "_C"
+
                 try:
                     # renaming if simple image
-                    new_name = f"{new_abs_path[0]}\\{folder_name[1]}_{name}{ext}"
+                    new_name = f"{new_abs_path[0]}\\{folder_name[1]}{country_ind_Ad}_{name}{ext}"
                     #new_name = f"{folder_name[1]}_{name}{ext}"  # folder_1_image.jpg
                     print("New_name: ", new_name)
                     #calling rename func.
