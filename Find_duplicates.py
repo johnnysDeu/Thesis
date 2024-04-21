@@ -23,7 +23,7 @@ Image.LOAD_TRUNCATED_IMAGES = True
 
 #reading from the .db file
 
-def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> None:
+def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> int:
     '''
     Function uses Hash algorithm to find complete duplicate images.
     It calulates the Hash for all images in a folder and stores the Hashes in a dictionary [Hash, Image].
@@ -77,6 +77,7 @@ def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> None:
         # print(folder_name)
         new_file = "complete_duplicates_" + folder_name[1] + ".txt"
     #display all duplicate images
+    file_cnt = 0
     for img_hash, files in duplicates.items():
         if len(files) > 1:
             if log_flag:
@@ -95,10 +96,12 @@ def find_complete_duplicate_images(folder_path, delete_flag, log_flag) -> None:
                 file_cnt = file_cnt + 1
                 if log_flag:
                     file.close()
+
+    return file_cnt
 #--------------------------------------------------------------------------------------------------------------------------
 
 
-def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) -> None:
+def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) -> int:
     '''
         Function uses pHash algorithm to find near identical images.
         pHash includes a hash comparison and if it is smaller than a threshold, then the images are considered near identical.
@@ -117,6 +120,7 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
     hashes: dict[str, str] = {}
     duplicates: list[str] = []
     # Iterate through all files in the folder
+    file_cnt = 0
     for root, dirs, files in os.walk(folder_path):
         for file_name in files:
             # Check if the file is an image
@@ -161,6 +165,8 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
                             #call detele_image to delete only the second in each pair
                             if delete_flag:
                                print("Delete second Tuple:", path)
+                               file_cnt = file_cnt + 1
+
                                # here we will call delete_image()
                                functions.delete_image(path)
                             #functions.delete_image(path)
@@ -178,6 +184,9 @@ def find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag) ->
             if len(items) > 1:
                 file.write(items+"\n")
         file.close()
+
+    return file_cnt
+
 #--------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------
 #-------------------------------  End Definitions   -----------------------------------------------------------------------

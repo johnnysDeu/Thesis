@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt  # type: ignore
 from PIL import Image as PImage
 from PIL import ImageTk
 import tkinter as tk
-
+from PIL import Image
 logging.basicConfig(filename='deleted_images.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 display_img_flag= False
@@ -66,12 +66,13 @@ def delete_image(file_path):
         print(f"An error occurred: {e}, {exc_tb.tb_lineno}")
 
 
-from PIL import Image
 
-def identify_image_color(folder_path, delete_flag): #image_path
+def identify_image_color(folder_path, delete_flag) -> int: #image_path
 
     for root, dirs, files in os.walk(folder_path):
+        file_cnt = 0
         for file_name in files:
+
             if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
                 file_path = os.path.join(root, file_name)
                 # Open the image
@@ -90,7 +91,7 @@ def identify_image_color(folder_path, delete_flag): #image_path
                     if delete_flag:
                         file_path = os.path.join(folder_path, file_name)
                         delete_image(file_path)
-
+                        file_cnt = file_cnt + 1
                 # Check if all pixels are white (255, 255, 255)
                 is_all_white = all(pixels[x, y] == (255, 255, 255) for x in range(width) for y in range(height))
                 if is_all_white:
@@ -100,7 +101,7 @@ def identify_image_color(folder_path, delete_flag): #image_path
                     if delete_flag:
                         file_path = os.path.join(folder_path, file_name)
                         delete_image(file_path)
-
+                        file_cnt = file_cnt + 1
 
                 # Check if all pixels have the same color
                 first_pixel_color = pixels[0, 0]
@@ -112,15 +113,19 @@ def identify_image_color(folder_path, delete_flag): #image_path
                     if delete_flag:
                         file_path = os.path.join(folder_path, file_name)
                         delete_image(file_path)
-
+                        file_cnt = file_cnt + 1
                 file_path = os.path.join(folder_path, file_name)
                 if is_mostly_same_color(file_path):
                     print(f"All Same Color: {file_name}")
+                    if delete_flag:
+                        delete_image(file_path)
+                        file_cnt = file_cnt + 1
 
                 img.close()
                 # If none of the above conditions are met, the image has multiple colors
                 #print("Multiple Colors")
 
+    return file_cnt
 
 def write_in_file(same_image, same_color, file_path):
     file_path = os.path.join(file_path, same_image)
@@ -158,7 +163,7 @@ def read_all_img_and_rename(folder_path: str) -> None:
     # new name2 = folder_1_image_name_AD.png
 
     folder_name = os.path.split(folder_path)
-    print("Folder name:", folder_name)
+    #print("Folder name:", folder_name)
 
     rest_path = folder_name[0]
     country_name = os.path.split(rest_path)
@@ -186,13 +191,15 @@ def read_all_img_and_rename(folder_path: str) -> None:
                     country_ind = "_S"
                 elif "Cy" in country_name[1]:
                     country_ind = "_C"
+                else:
+                    country_ind = "_C"
 
                 try:
                     # renaming if Ad
                     # Adding manualy G for Germany, S for spain and C for cyprus
                     new_name = f"{new_abs_path[0]}\\{folder_name[1]}{country_ind}_{name}_AD{ext}"  # folder_1_image_AD.jpg
                     #new_name2 = f"{folder_name[1]}_{new_name}"
-                    print("New_name: ", new_name)
+                    #print("New_name: ", new_name)
                     #calling rename func.
                     rename_img(abs_path, new_name)
 
@@ -216,12 +223,14 @@ def read_all_img_and_rename(folder_path: str) -> None:
                     country_ind_Ad = "_S"
                 elif "Cy" in country_name[1]:
                     country_ind_Ad = "_C"
+                else:
+                    country_ind_Ad = "_C"
 
                 try:
                     # renaming if simple image
                     new_name = f"{new_abs_path[0]}\\{folder_name[1]}{country_ind_Ad}_{name}{ext}"
                     #new_name = f"{folder_name[1]}_{name}{ext}"  # folder_1_image.jpg
-                    print("New_name: ", new_name)
+                    #print("New_name: ", new_name)
                     #calling rename func.
                     rename_img(abs_path, new_name)
                 except Exception as e:
@@ -240,7 +249,7 @@ def read_all_img_and_rename(folder_path: str) -> None:
 def rename_img(old_name: str, new_name: str) -> None:
     try:
         os.rename(old_name, new_name)
-        print(f"old_name: {old_name} - new name: {new_name}")
+        #print(f"old_name: {old_name} - new name: {new_name}")
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -248,7 +257,7 @@ def rename_img(old_name: str, new_name: str) -> None:
 
 
 #
-def is_mostly_same_color(image_path, threshold=10):
+def is_mostly_same_color(image_path, threshold=5):
     try:
         # Load the image
         image = cv2.imread(image_path)
