@@ -13,7 +13,7 @@ import importlib.util
 # when delete flag = true, delete the duplicate
 # run this for all folders
 delete_flag = True
-log_flag = False
+log_flag = True
 copy_image_flag = False
 
 
@@ -43,26 +43,26 @@ if __name__ == "__main__":
         # better mark all ADs first
         #functions.read_all_img_and_rename(fold)  # 1.  renaming images when ADs and
         ###functions.move_ads_and_img(fold)  # testing how many adds exist (optional)
-        Convert_and_delete.image_type_converter(fold) # 2. run to remove .gif
-        Convert_and_delete.delete_rest(fold) #3. delete all Not JPEG
+        #Convert_and_delete.image_type_converter(fold) # 2. run to remove .gif
+        #Convert_and_delete.delete_rest(fold) #3. delete all Not JPEG
 
         # this takes long to run, over 10 -15 min
-        deleted_Black_white = functions.identify_image_color(fold, delete_flag)  # 4. about 8-12 min runtime , First to run
-        deleted_Black_white = deleted_Black_white + 1
+        #deleted_Black_white = functions.identify_image_color(fold, delete_flag)  # 4. about 8-12 min runtime , First to run
+        #deleted_Black_white = deleted_Black_white + 1
 
-        deleted_CompDupl_cnt = Find_duplicates.find_complete_duplicate_images(fold, delete_flag, log_flag) # about 8 min runtime
-        deleted_compDupl_cnt = deleted_compDupl_cnt + 1
+        #deleted_CompDupl_cnt = Find_duplicates.find_complete_duplicate_images(fold, delete_flag, log_flag) # about 8 min runtime
+        #deleted_compDupl_cnt = deleted_compDupl_cnt + 1
 
-        deleted_nearDupl_cnt = Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
-        deleted_nearDupl_cnt = deleted_nearDupl_cnt + 1
+        #deleted_nearDupl_cnt = Find_duplicates.find_near_duplicates(fold, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
+        #deleted_nearDupl_cnt = deleted_nearDupl_cnt + 1
 
         ###delete all "subfolder" folders
-        functions.delete_subfolder(fold)
+        #functions.delete_subfolder(fold)
 
-        functions.resize_image(fold)
+        #functions.resize_image(fold)
 
         ###move ads to Ads folder
-        functions.move_ads_and_img(fold)
+        #functions.move_ads_and_img(fold)
 
     print("Renaming images done:")
     print("Converting images done:")
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Cyprus\\folder_2"
         #folder_path = "C:\\Users\\YannisPC\\PycharmProjects\\Thesis\\Thesis\\Crawler_results_Spain\\folder_2"
 
-        #folder_path = r"C:\Users\doitsinis\PycharmProjects\Thesis\Sample_images" # douleia
+        folder_path = r"C:\Users\YannisPC\PycharmProjects\Thesis\Thesis\data_medium\Sample_Images" # douleia
 
 
         #print("Current folder : ", fold)
@@ -98,12 +98,13 @@ if __name__ == "__main__":
         #print(folder_name)
         #deleted_cnt = Find_duplicates.find_complete_duplicate_images(folder_path, delete_flag, log_flag) # about 8 min runtime
         #print(f"Deleted: {deleted_cnt} complete duplicates from folder: {folder_path}")
+
         #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)# about 10 min runtime
         #Find_duplicates.find_near_duplicates(folder_path, delete_flag, log_flag, copy_image_flag)
         #functions.identify_image_color(folder_path, delete_flag)                # this func has issue with .gif images. we need to convert all first
         #functions.read_all_img_and_rename(folder_path) # renaming images when ADs
 
-        #functions.resize_image(folder_path)
+        functions.resize_image(folder_path)
 
         #sleep(0.02)
 
