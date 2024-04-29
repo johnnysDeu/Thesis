@@ -1,0 +1,282 @@
+\documentclass{article}
+%\usepackage{graphicx} % Required for inserting images
+
+\usepackage{blindtext} % needed for creating dummy text passages
+\usepackage[backend=biber,defernumbers=true,refsection=section]{biblatex} % for Bibliography
+\usepackage{graphicx} % needed for \includegraphics 
+
+
+\addbibresource{bibliographyFile.bib} % 
+
+\usepackage[
+	colorlinks=true
+	,breaklinks
+	%,ngerman
+	]{hyperref} % needed for creating hyperlinks in the document, the option colorlinks=true gets rid of the awful boxes, breaklinks breaks lonkg links (list of figures), and ngerman sets everything for german as default hyperlinks language
+\usepackage[hyphenbreaks]{breakurl} 
+\usepackage{xcolor}
+\definecolor{c1}{rgb}{0,0,1} % blue
+\definecolor{c2}{rgb}{0,0.3,0.9} % light blue
+\definecolor{c3}{rgb}{0.858, 0.188, 0.478} % pink
+\hypersetup{
+    linkcolor={c1}, % internal links
+    citecolor={c2}, % citations
+    urlcolor={c3} % external links/urls
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  End of Packages  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Msc AI Thesis}
+\author{doitsinisgiannis }
+\date{March 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+%\blindtext
+% \cite{Chollet}
+\textbf{Data Cleaning and Preparation}
+
+\begin{itemize}
+    \item Resize Images
+    \cite{CholletDeeplearingWithPY} (5.2.4)\\
+    1.Decode the JPEG content to RGB grids of pixels.\\
+    2. Convert these into floating-point tensors.\\
+    3. Rescale the pixel values (between 0 and 255) to the [0, 1] interval (as you know,
+neural networks prefer to deal with small input values).
+    \item Convert to a Common Format (JPEG)
+    \\
+    JPEG (Joint Photographic Experts Group):
+
+JPEG is a widely used format for storing compressed images.
+It offers a good balance between image quality and file size, making it efficient for storing large datasets of images.
+Many deep learning frameworks and libraries (such as TensorFlow and PyTorch) support loading JPEG images directly, making it convenient for DNN training and inference.
+
+PNG (Portable Network Graphics):
+
+PNG is another popular image format that supports lossless compression.
+It is commonly used for images that require transparency or detailed graphics, such as logos or icons.
+While PNG files are larger than JPEG files, they retain higher quality and are suitable for certain types of image classification tasks.
+
+
+In summary, JPEG and PNG are often the preferred image formats for DNN image classification due to their balance of image quality, file size, and widespread support in deep learning frameworks.
+
+    \item Remove Complete and Near Duplicates
+       \\ Hash and pHash
+    \item Remove Black-White or same color images
+    \item Remove damaged images or with non-useful information.
+\end{itemize}
+
+
+\textbf{Data Pre-Processing}
+
+\begin{itemize}
+    \item Normalization\\
+    Normalize the pixel values of the images to a common scale, typically in the range [0, 1] or [-1, 1].
+    \item Data Augmentation\\
+    Augment the data to increase its diversity and improve the generalization of your model. Common augmentation techniques include rotation, flipping, scaling, and adding noise to the images.
+    \item Data Balancing (if applicable)\\
+    If the dataset is imbalanced (i.e., some classes have significantly more samples than others), consider balancing the data by oversampling minority classes or under sampling majority classes to prevent bias in the model. 
+    \item Data Splitting\\
+    Training, validation, and test sets.
+\end{itemize}
+
+The authors used on their system images with resolution 256 x 256. That was the only preprocessing they did on the data except for subtracting the mean activity over the training set for each pixel. In this way, they trained the network on the raw RGB values of the pixels.
+For the model, they where using 8 layers in total, 5 Convolutional Layers and 3 dense connected layers. A ReLU function was used as the activation function for the Convoluitional layer.
+\cite{KrizhevskySutskeverHinton}
+\\
+\textbf{Pooling}\\
+Pooling layers are applied after the convolutional layers. Reducing the size of feature maps is the primary goal of pooling, which also reduces the number of training parameters and speeds up computation. There are four types of pooling, Max, Min, Average and Global. 
+\\Max Pooling summarizes the features in a region by the maximum value in that Region. This is mostly used on images that have dark background since Max pooling will select mostly brighter pixels. Similarly, Min pooling will select features in a region by minimum values and is recommended for images with light background.
+The average pooling gets the average values on a region therefore is has something like a smoothing effect. When applied it smooths the harsh edges of a picture and is used when edges are irrelevant.
+Finally, Global pooling is used for reducing the feature map to only one value and is often used after the last convolutional layer as a replacement for a dense layer. It is combined with all previous types so that we have GlobalMaxPoooling, GlobalMinPooling and GlobalAvgPooling layers.
+%% here maybe i need to elaborate more.
+\\
+\textbf{Data Augmentation}
+The aim of this method is to reduce over-fitting by artificially enlarging the dataset. The authors \cite{KrizhevskySutskeverHinton} used two different types of data augmentation which both produce transformed images from the original images.
+\\The first type was the generation of new images by extracting random 224x224 patches from the origila 256x256 images. This method allowed them to increase their training set by a factor of 2048, which next allowed them to use the final complex network with no significant over-fitting.\\
+\textbf{Dropout}
+This technique consists of setting to zero the output of the hidden neurons with probability 50\%. The neurons that are dropped out in this way, do not participate in the forward pass in the information and are excluded from the backpropagarion. This technique reduces complex co-adaptations of neurons,
+since a neuron cannot rely on the presence of particular other neurons. It is, therefore, forced to
+learn more robust features that are useful in conjunction with many different random subsets of the other neuron. However, this technique has the drawback that it can take 2-3 time longer to train than a normal network.
+
+\textbf{Advantages of CNN}
+Both Dense neural networks and Convolutional Neural networks are suitable for doing image classification tasks. However, the CNN have big advantage on such tasks, because they can identify local patterns whereas the Dense layer can only learn global patterns. \cite{CholletDeeplearingWithPY} (p.122-123)
+\\
+\\
+\textbf{Advantages of CNN}\\
+    Convolutional layers and pooling layers are the two incredibly basic components that make up convolutional neural networks. These layers can be arranged in almost unlimited ways for any given computer vision issue, despite their simplicity. Convolutional and pooling layers, among other components of a convolutional neural network, are easy to comprehend. The difficult aspect of implementing convolutional neural networks in real-world applications is creating model designs that make optimal use of these basic components. 
+    The reason why convolutional neural network is hugely popular is because of their architecture, the best thing is there is no need of feature extraction.  The system learns to do feature extraction and the core concept is, it uses convolution of image and filters to generate invariant features which are passed on to the next layer. The features in next layer are convoluted with different filters to generate more invariant and abstract features and the process continues till it gets final feature/output which is invariant to occlusions.
+\section{The Model}
+
+\cite{VisualizingCNN}
+\cite{DeeperWithCNN}\\
+\\
+(Paraphrase)
+In machine learning, we aim to build predictive models that forecast the outcome for a given input data. To achieve this, we take additional steps to tune the trained model. So, we evaluate the performance of several candidate models to choose the best-performing one.
+
+However, deciding on the best-performing model is not a straightforward task because selecting the model with the highest accuracy doesn’t guarantee it’ll generate error-free results in the future. Hence, we apply train-test splits and cross-validation to estimate the model’s performance on unseen data.
+\\ 
+\textbf{Overfitting}\\    
+\\ 
+Overfitting happens when we train a machine learning model too much tuned to the training set. As a result, the model learns the training data too well, but it can’t generate good predictions for unseen data. An overfitted model produces low accuracy results for data points unseen in training, hence, leads to non-optimal decisions.
+
+A model unable to produce sensible results on new data is also called “not able to generalize.” In this case, the model is too complex, and the patterns existing in the dataset are not well represented. Such a model with high variance overfits.
+
+Overfitting models produce good predictions for data points in the training set but perform poorly on new samples.\\
+\\
+\textbf{Underfitting}\\
+\\ 
+Underfitting occurs when the machine learning model is not well-tuned to the training set. The resulting model is not capturing the relationship between input and output well enough. Therefore, it doesn’t produce accurate predictions, even for the training dataset. Resultingly, an underfitted model generates poor results that lead to high-error decisions, like an overfitted model.
+
+An underfitted model is not complex enough to recognize the patterns in the dataset. Usually, it has a high bias towards one output value. This is because it considers the variations of the input data as noise and generates similar outputs regardless of the given input.
+
+....
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/over_underFitting.jpg}
+	\caption{Comparison Table}
+    \label{nn_pic}
+\end{figure}
+\vfill
+
+\url{https://www.baeldung.com/cs/ml-underfitting-overfitting#:~:text=Overfitting}
+\\
+\\
+Its a good practice to save the model after training into a .h5 format\\
+
+\textbf{Metrics}\\
+\textbf{Loss Function}\\
+    binary crossentropy
+    
+\textbf{Activation Function}\\
+
+\textbf{Validation}\\
+
+\textbf{Optimizers}\\
+Show the difference between Adam, RMSprop, SGD.
+see AI625.Lab06.ipynb
+\\
+\textbf{Reduce Over-fitting}\\
+\begin{itemize}
+    \item Simplifying the model
+    \item Early Stopping
+    \item Data Augmentation
+    \item Regularization\\
+        L1 and L2 regularization:
+    \item Dropouts
+\end{itemize}
+
+\textbf{Using a pretrained convnet}
+
+\textbf{Fine-tuning}\\
+\cite{CholletDeeplearingWithPY} (p.154-155)
+Another widely used technique for model reuse, complementary to feature
+extraction, is fine-tuning. Fine-tuning consists of unfreezing a few of
+the top layers of a frozen model base used for feature extraction, and jointly training
+both the newly added part of the model (in this case, the fully connected classifier)
+and these top layers. This is called fine-tuning because it slightly adjusts the more
+abstract representations of the model being reused, in order to make them more relevant
+for the problem at hand.\\
+\textbf{Feature extraction}\\
+
+It’s easy to reuse an existing convnet on a new dataset via feature extraction.
+This is a valuable technique for working with small image datasets
+
+You may wonder, how could accuracy stay stable or improve if the loss isn’t
+decreasing? The answer is simple: what you display is an average of pointwise loss values;
+but what matters for accuracy is the distribution of the loss values, not their average,
+because accuracy is the result of a binary thresholding of the class probability
+predicted by the model. The model may still be improving even if this isn’t reflected in the average loss.
+
+
+As a complement to feature extraction, you can use fine-tuning, which adapts to
+a new problem some of the representations previously learned by an existing
+model. This pushes performance a bit further
+
+
+
+
+\section{Imbalanced datasets}
+
+    \begin{itemize}
+        \item Resampling Techniques:\\
+        You can balance the dataset by either oversampling the minority class (by duplicating existing samples or generating synthetic ones) or undersampling the majority class (by randomly removing samples). Techniques such as SMOTE (Synthetic Minority Over-sampling Technique) can be useful for generating synthetic samples.
+        \item Weighted Loss Function:\\
+        Modify the loss function to penalize misclassifications of the minority class more than the majority class. This can be achieved by assigning higher weights to the minority class during training.
+        \item Cross-validation:\\ 
+        Utilize techniques such as stratified k-fold cross-validation to ensure that each fold of the data contains a proportional representation of both classes.
+        \item Transfer Learning:\\
+        If you have access to pre-trained models, you can leverage transfer learning techniques. Fine-tuning a pre-trained model on your imbalanced dataset might help alleviate the issue to some extent.
+        \item Experimentation:\\ Ultimately, the most reliable approach is empirical experimentation. Try training the model with different ratios and observe the performance metrics such as accuracy, precision, recall, and F1-score on a validation set. Choose the ratio that gives the best overall performance.
+    \end{itemize}
+
+\cite{TrainingDNN_Imbalanced_Data_Sets}
+(Paraphrase)
+Currently, mean squared error (MSE) is the most
+commonly used loss function in the standard deep learning
+algorithms. It works well on balanced data sets while it fails to
+deal with imbalanced ones. The reason is that MSE captures
+the errors from an overall perspective, which means it
+calculates the loss by firstly sum up all the errors from the
+whole data set and then calculates the average value. This can
+capture the errors from the majority and minority classes
+equally when the binary-classes data sets are balanced.
+However, when the data set is imbalanced, the error from the
+majority class contributes much more to the loss value than the
+error from the minority class. In this way, this loss function is
+biased towards majority class and fails to capture the errors
+from two classes equally. Further, the algorithms are very
+likely to learn biased representative features from the majority
+class and then achieve biased classification results.
+
+\section{Reducing Over-fitting}
+    \begin{itemize}
+        \item  Regularization
+        \item  Learning Rate
+        \item  Model Complexity: The model might be too complex for the given dataset, leading to overfitting
+        \item  Data Augmentation
+        \item  Batch Size
+        \item  Loss Function
+        \item  Normalization
+    \end{itemize}
+
+
+\section{Visualizing what our model learns}
+A common theme in machine learning and training of deep neural networks is that these networks act as "black boxes". This phrase originates from the fact that its very difficult to understand how the decisions are made. Firstly, the complexity of a DNN (many of them can have millions or even billions of parameters) makes its very hard to traces the path from the input to the output. Secondly, the use of non-linear activation functions (Sigmoid, ReLU, etc.) to transform the outputs of one layer into the inputs of the next layer, complicate further the tracing path from input to output. Finally, there is lack of transparency in what features they learn during their training process.\\
+
+    All the above obscuring factors cause, in a sense, scepticism and distrust against these networks.
+Its natural not to trust something that you don't understand, especially with applications where the risk is high, such with models used for medical diagnosis tasks. Furthermore, it can be difficult to debug models when they make mistakes. If you don't understand why the model made a mistake then it can be hard to fix it. Lastly,  it can be hard to adapt and modify a model to perform well in a new situation.
+
+Thankfully, convolutional (deep) neural networks are not like that, in fact the are the opposite of a "black box". The representations that are learned by a convnet are very much subject to visualization mostly, because they are representations of visual concepts. The recent years, various methods have been developed for visualizing and interpreting these representations and below we will name just a few.
+\begin{itemize}
+    \item \textit{Visualizing intermediate convnet outputs} (intermediate activations):
+    Useful for understanding how the input is transformed by subsequent convolutional layers, and for obtaining insights of the significance of each convnet filter.
+    \item \textit{Visualizing convnets filters}:
+    Useful for understanding the exact visual pattern or idea that each convolutional neural network filter is sensitive to.
+    \item \textit{Visualizing heatmaps of class activation in an image}:
+    Useful for localizing items in photos and helping you understand which areas of the image were classified as belonging to a particular class.
+\end{itemize}
+
+
+
+\section{Optimization and Model comparison}
+
+We will introduce three models in total.
+
+    \begin{itemize}
+        \item  Simple "vanilla" Model
+        \item  Model with Data Augmentation
+        \item  Pre-trained Model\\
+        Feature Extraction\\
+        Fine Tuning     
+        
+    \end{itemize}
+
+
+\printbibliography
+
+\end{document}
