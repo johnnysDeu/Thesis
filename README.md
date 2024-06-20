@@ -8,6 +8,7 @@ The Model_Optimizers was used to select the optimal optimizer
 
 The Dataset
 
+```
 Dataset
 └── shuffled_cleaned_images (35.000)     
     ├── train (60%)
@@ -19,4 +20,5 @@ Dataset
     └── test (20%)
         ├── Ads
         └── Regular
-
+```
+https://github.com/dessa-oss/DeepFake-Detection
