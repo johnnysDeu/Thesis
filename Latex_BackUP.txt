@@ -4,7 +4,15 @@
 \usepackage{blindtext} % needed for creating dummy text passages
 \usepackage[backend=biber,defernumbers=true,refsection=section]{biblatex} % for Bibliography
 \usepackage{graphicx} % needed for \includegraphics 
+%%% Add this %%%
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename~\thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{40pt}
+%\titlespacing*{name=\chapter,numberless}{0pt}{-30pt}{10pt}
+%%%   End   %%%
 
+\usepackage{comment}
 
 \addbibresource{bibliographyFile.bib} % 
 
@@ -25,62 +33,251 @@
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  End of Packages  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Msc AI Thesis}
-\author{doitsinisgiannis }
-\date{March 2024}
 
 \begin{document}
+\begin{titlepage}
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+%\vspace{30mm}
+\includegraphics[width=0.8\textwidth]{figures/EUC.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
+\center % Center everything on the page
+%----------------------------------------------------------------------------------------
 
-\maketitle
+%----------------------------------------------------------------------------------------
+%	HEADING SECTION
+%----------------------------------------------------------------------------------------
+\vspace{-15mm}
+School of Sciences \textbar \hspace{1mm}  Department of Computer Science and Engineering
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\vspace{2cm}
+{\LARGE Image classification task: Distinguish Web advertisements from regular content}
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	MIDLE TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\vspace{2cm}
+\textsc{\large Master of Science in Artificial Intelligence }
+
+
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\vspace{25mm}
+\emph{Author:}   Ioannis Doitsinis 
+
+
+%----------------------------------------------------------------------------------------
+%	PANEL SECTION
+%----------------------------------------------------------------------------------------
+\vspace{25mm}
+\begin{center}
+%\emph{by}
+Thesis Panel:\\
+\emph{Supervisor:} 
+Dr. Iordanou % Supervisor's Name
+
+Panel member: Dr. Cheng \\
+
+\end{center}
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+\vspace*{\fill}
+{\large August 2024}
+
+\end{titlepage}
+\pagestyle{plain}
+%%%%%%%%%%%%%%%%%%55      END OF FIRST PAGE          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\chapter*{Abstract}%
+%\addcontentsline{toc}{chapter}{\numberline{}Abstract}%
+\section*{Acknowledgements}
+I would like to express my deepest gratitude to all those who have supported and guided me
+throughout the completion of this thesis.
+
+First and foremost, I would like to thank my advisor, Dr. Iordanou, for his invaluable guidance, continuous support, and patience throughout my research. His insightful feedback and constructive criticism have greatly contributed to the development of this work.
+
+I am also grateful to the member of my thesis committee, Dr. Cheng, for his time, effort, and valuable suggestions that helped shape this thesis.
+
+Lastly, a big thank to my family and friends for their support and for everyone who has contributed to this work, directly or indirectly, whose names may not be mentioned here but who have played a significant role in this journey.
+\newpage 
+
+%%%%%%%%%%%%%%%%%%55      END OF ABSTRACT         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\chapter*{Abstract}%
+%\addcontentsline{toc}{chapter}{\numberline{}Abstract}%
+\section*{Abstract}
+In the era of digital content consumption, the ability to automatically classify images has become increasingly vital. This thesis presents the development and evaluation of an image classifier aimed at distinguishing between advertisements and simple web content. Leveraging machine learning techniques, particularly deep learning neural networks, the classifier is trained on a dataset comprising images from diverse sources. The methodology involves preprocessing techniques, feature extraction, model training, and evaluation metrics. Through extensive experimentation, the effectiveness and robustness of the classifier are assessed, offering insights into its potential applications in content moderation, digital marketing analytics, and user experience enhancement.
+
+\newpage 
+
+%%%%%%%%%%%%%%%%%%55      END OF ABSTRACT         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%----------------------------------------------------------------------------------------
+%	CONTENTS SECTION
+%----------------------------------------------------------------------------------------
+\tableofcontents
+%----------------------------------------------------------------------------------------
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%  1o kef %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \section{Introduction}
 
+\subsection{Overview}
+
+In today's digital landscape, web-pages have evolved into multimedia platforms that incorporate images and videos. Many web-pages monetize their content by integrating web advertisements in the form of images. Some strategically place these advertisements to seamlessly blend with the web page's actual content, aiming to entice users into clicking on them, thereby boosting the click-through rates of these ads. This makes the task of collecting image content from websites and categorizing it into "Advertising" or "Normal content" difficult.
+
+and we had to tackle this issue using various techniques as well as manual work.
+
+\subsection{Aims and Objectives}
+The objectives of this project is two fold. First, the reprocessing and normalization of a large dataset of images and advertisements extracted from various websites from different geographic locations, in order to be used in an image classification task using Artificial Intelligence (AI) and Machine learning (ML) algorithms. As a second step, the utilization of different machine learning algorithms specifically designed for image classification tasks. Our focus lies in distinguishing between the web-page's original content and the advertisements it displays. Through this project, we aim to contribute to the field of image classification and the broader understanding of how web advertisements are seamlessly integrated into online content. This work seeks to enhance our ability to discern and differentiate between web-page content and the promotional materials they present.
+
+\subsection{Structure of the Thesis}
+
+\subsection{Summary}
+
+
+\section{The Dataset}
+
+The dataset was the result of a long process of collecting image content from various websites. The selection of websites was partly arbitrary, but mainly news websites were chosen as they update their content daily. We then tried to diversify the set by selecting websites from different countries, mainly Germany, Cyprus and Spain at first and later on from more countries.
+
+The creation of the dataset is not part of this thesis, but was mainly carried by Dr. Jordan who generously shared it with us to make this thesis possible. Dr Iodranou, who is also the supervisor of this work, used automated software to crawl a website and download the content in image format. The distinction between advertising and normal content is achieved with the "crawler" software that examines iframes and classifies this content as advertising, while all other content is classified as normal content.
+Statistically, iframes contain advertising content with a probability of more than 90\%, so all such data is labelled "Ad". However, sometimes advertising content is not only found in the iframes but also in the main body of a web page, which makes it difficult to detect. In such cases, the ad content is labeled as "normal", which, if not cleaned, could affect our model later on. 
+As one can understand, the dataset needs cleaning and preprocessing before it is used to train a machine learning algorithm. 
+\\
+\\
 %\blindtext
 % \cite{Chollet}
-\textbf{Data Cleaning and Preparation}
+\subsection{Data Cleaning and Preparation}
+
+* Describe the pipeline in a few words first.
 
 \begin{itemize}
     \item Resize Images
     \cite{CholletDeeplearingWithPY} (5.2.4)\\
-    1.Decode the JPEG content to RGB grids of pixels.\\
-    2. Convert these into floating-point tensors.\\
-    3. Rescale the pixel values (between 0 and 255) to the [0, 1] interval (as you know,
-neural networks prefer to deal with small input values).
-    \item Convert to a Common Format (JPEG)
+     Resizing the images to a uniform size not only makes processing easier but also ensures consistency for the model. 
+     In the original dataset the images had a wide range of sizes, as they were collected from many websites. The process of selecting the appropriate image size depends on many factors. The architecture of the models, the computational resources at our disposal, the type of problem we want to solve and whether we choose to use pre-trained models are some of these factors. we avoided very small sizes, smaller than 100x100 pixels, because we would lose a lot of details in the image, as well as very large, larger than 512x512 pixels, so that the training could be done in a reasonable amount of time. Finally we took into account that in future steps in this work we would use pre-trained models which have standard image dimensions of 224x224 pixels, so we chose this size for our images. 
+     
+
+
+    \item Converting to a Common Format
     \\
-    JPEG (Joint Photographic Experts Group):
-
-JPEG is a widely used format for storing compressed images.
+   
+    Convolutional neural networks are basically mathematical models that use principles from linear algebra, particularly convolution operations, to extract features and identify patterns within images. We'll describe these in more detail in section 3, but at this point we're just mentioning a few things about data entry. Simply put, they don't take an image as input, but work with multidimensional tensors (i.e. a multidimensional arrays). The tensors shape is usually 4-Dimentional for images (number of images per batch, image height, image width and number of channels). Consequently the initial image format doesnt affect the models performace that greatly, as all images are converted into 4-D Tensors first. 
+    
+    However, the selected image format must meet certain specifications. Most formats use some compression which can sometimes cause information loss. On the other hand, compression is useful to be able to have shorter times in loading the data and training the model. In our case we used the JPEG format which is a widely used format for storing compressed images.
 It offers a good balance between image quality and file size, making it efficient for storing large datasets of images.
-Many deep learning frameworks and libraries (such as TensorFlow and PyTorch) support loading JPEG images directly, making it convenient for DNN training and inference.
+Many deep learning frameworks and libraries (such as TensorFlow and PyTorch) support loading JPEG images directly, making it convenient for CNN training.
 
-PNG (Portable Network Graphics):
-
-PNG is another popular image format that supports lossless compression.
-It is commonly used for images that require transparency or detailed graphics, such as logos or icons.
-While PNG files are larger than JPEG files, they retain higher quality and are suitable for certain types of image classification tasks.
-
-
-In summary, JPEG and PNG are often the preferred image formats for DNN image classification due to their balance of image quality, file size, and widespread support in deep learning frameworks.
-
+    \item Remove irrelevant images.
+    
+    Next step in our pipeline was to remove "useless" images, which dont contain any information. For example, all black/white or all same colour images dont contain meaningful information and are simply useless, so we had to remove them.
+    
     \item Remove Complete and Near Duplicates
-       \\ Hash and pHash
-    \item Remove Black-White or same color images
-    \item Remove damaged images or with non-useful information.
+    
+    The next step of creating a clean dataset was to find duplicate images or "almost" duplicate and remove them.  Duplicates can skew the training data and waste computational resources during training.  We used Hash algorithms in both cases for identifying complete and near duplicates.
+    Hashing algorithms can be used to identify duplicate images by creating a compact, fixed-size representation (hash) of an image that can be compared to hashes of other images to identify duplicates.
+
+    \textbf{Complete duplicates.}
+    In this case, we used the MD5 Hash algorithm that generates 128-bit Hashes of grayscale images. The MD5 algorithm takes as input a byte array which in our case is the converted byte image and outputs 32 Hex characters which is the hash of that image. After we have the Hashes of all images we can compare them and remove the images who's hash number already exists.
+    This method though, identifies only complete duplicates. If two images differ by only one pixel, i.e. they are basically identical, they would get different Hash encoding and would be treated as not duplicates. To identify such images we would need a slightly different algorithm. 
+
+    \textbf{Near Duplicates.}
+    Perceptual hashing (pHash) identifies near-duplicate images by creating a compact representation of an image's content. The process involves resizing the image to a standard size (32x32 pixels in our case), converting it to grayscale, and applying the Discrete Cosine Transform (DCT) to capture its frequency components. By focusing on the low-frequency components, which represent the most significant visual features, pHash generates a 64-bit binary string. Each bit in this string is derived by comparing the DCT coefficients to their mean value, producing a hash that is robust to minor variations like scaling, slight rotations, and color changes. The similarity between two images is then measured by calculating the Hamming distance between their hashes, with a small distance indicating high perceptual similarity. Finally, pHashes from images that have smaller distance than a specific threshold are considered near duplicates and are discarded. 
+    
+    % Hash and pHash    
 \end{itemize}
 
 
-\textbf{Data Pre-Processing}
+
+\begin{comment}
+ \begin{itemize}
+        \item Resampling Techniques:\\
+        You can balance the dataset by either oversampling the minority class (by duplicating existing samples or generating synthetic ones) or undersampling the majority class (by randomly removing samples). Techniques such as SMOTE (Synthetic Minority Over-sampling Technique) can be useful for generating synthetic samples.
+        \item Weighted Loss Function:\\
+        Modify the loss function to penalize misclassifications of the minority class more than the majority class. This can be achieved by assigning higher weights to the minority class during training.
+        \item Cross-validation:\\ 
+        Utilize techniques such as stratified k-fold cross-validation to ensure that each fold of the data contains a proportional representation of both classes.
+        \item Transfer Learning:\\
+        If you have access to pre-trained models, you can leverage transfer learning techniques. Fine-tuning a pre-trained model on your imbalanced dataset might help alleviate the issue to some extent.
+        \item Experimentation:\\ Ultimately, the most reliable approach is empirical experimentation. Try training the model with different ratios and observe the performance metrics such as accuracy, precision, recall, and F1-score on a validation set. Choose the ratio that gives the best overall performance.
+    \end{itemize}
+\end{comment}    
+
+\cite{TrainingDNN_Imbalanced_Data_Sets}
+(Paraphrase)
+Currently, mean squared error (MSE) is the most
+commonly used loss function in the standard deep learning
+algorithms. It works well on balanced data sets while it fails to
+deal with imbalanced ones. The reason is that MSE captures
+the errors from an overall perspective, which means it
+calculates the loss by firstly sum up all the errors from the
+whole data set and then calculates the average value. This can
+capture the errors from the majority and minority classes
+equally when the binary-classes data sets are balanced.
+However, when the data set is imbalanced, the error from the
+majority class contributes much more to the loss value than the
+error from the minority class. In this way, this loss function is
+biased towards majority class and fails to capture the errors
+from two classes equally. Further, the algorithms are very
+likely to learn biased representative features from the majority
+class and then achieve biased classification results.
+\\
+
+\subsection{Data Pre-Processing}
+At this point of the project, we have a clean dataset with which we can start our main pipeline. What we will do next is the pre-processing of the dataset as we cannot use it as it is for training a neural network. 
+
+Data pre-processing is a crucial step in preparing input data for Convolutional Neural Networks (CNNs). Proper pre-processing ensures that the data fed into the network is consistent, normalized, and formatted correctly, which can significantly impact the model's performance. 
 
 \begin{itemize}
+    \item Image Resizing\\
+    This step was covered in the "cleaning" phase as mentioned in 2.1 section. 
+    As a remimder, we downscaled our images to 224x224 pixels.
+    
     \item Normalization\\
-    Normalize the pixel values of the images to a common scale, typically in the range [0, 1] or [-1, 1].
-    \item Data Augmentation\\
-    Augment the data to increase its diversity and improve the generalization of your model. Common augmentation techniques include rotation, flipping, scaling, and adding noise to the images.
-    \item Data Balancing (if applicable)\\
+    Normalization adjusts the pixel intensity values to a common scale, usually between 0 and 1, or -1 and 1. This step helps in accelerating the training process by reducing the variance in the input data and ensuring that the model converges faster. In this step, we re-scaled the pixel values from [0, 255] to the [0, 1] interval by dividing each pixel value by 255.
+    
+    %\item Data Augmentation\\
+    %Augment the data to increase its diversity and improve the generalization of your model. Common %augmentation techniques include rotation, flipping, scaling, and adding noise to the images.
+    \item Data Balancing (if applicable) **** Maybe i need to mention that we started with a way greater class for the regular images that the Ads.\\
+    
     If the dataset is imbalanced (i.e., some classes have significantly more samples than others), consider balancing the data by oversampling minority classes or under sampling majority classes to prevent bias in the model. 
+    \item Data Augmentation
+    \\Data augmentation artificially increases the diversity of the training set by applying random transformations such as rotations, shifts, flips, zooms, and crops to the images. 
+    In addition to these transformations, we applied also random colour, brightness and contrast transformation to further add noise to our dataset.  
+    This helps in improving the generalization ability of the CNN by making it robust to variations in the input data.
+
+    \item Shuffling and Batching\\
+    Before feeding the data into the CNN, it is essential to shuffle the dataset to ensure that the model does not learn any unintended patterns. For example, if our dataset is sorted in a way that makes images with specific features to be clustered together, these images could end up in the validation set during the splitting, causing unexpected unexpected behavior during training.
+    
+    Batching involves splitting the dataset into smaller groups (batches) which are processed together during training. The batch size can be understood as a trade-off between accuracy and speed. Large batch sizes can lead to faster training times but may result in lower accuracy and overfitting, while smaller batch sizes can provide better accuracy, but can be computationally expensive and time-consuming. We experimented we various batch sizes and decided to use 64 as the training, validation and testing batch size as this size performed best.
+    
     \item Data Splitting\\
-    Training, validation, and test sets.
+    Finally, after finishing the pre-processing steps, we splitted the dataset into three subsets: 
+    Training, validation, and test set.
+
+    \textbf{Training Set}: Used to train the model. It comprises the majority of the dataset (60\% in our case).\\
+    \textbf{Validation Set}: Used to tune hyperparameters and make decisions on model architecture. It helps in monitoring the model's performance during training to avoid overfitting (20\%).\\
+    \textbf{Testing Set}: Used to evaluate the final model performance. This set is only used once the model is fully trained (20\%).\\
+    Splitting was done in a way that maintains the distribution of classes (stratified splitting) to ensure balanced datasets.
 \end{itemize}
 
 The authors used on their system images with resolution 256 x 256. That was the only preprocessing they did on the data except for subtracting the mean activity over the training set for each pixel. In this way, they trained the network on the raw RGB values of the pixels.
@@ -94,9 +291,7 @@ The average pooling gets the average values on a region therefore is has somethi
 Finally, Global pooling is used for reducing the feature map to only one value and is often used after the last convolutional layer as a replacement for a dense layer. It is combined with all previous types so that we have GlobalMaxPoooling, GlobalMinPooling and GlobalAvgPooling layers.
 %% here maybe i need to elaborate more.
 \\
-\textbf{Data Augmentation}
-The aim of this method is to reduce over-fitting by artificially enlarging the dataset. The authors \cite{KrizhevskySutskeverHinton} used two different types of data augmentation which both produce transformed images from the original images.
-\\The first type was the generation of new images by extracting random 224x224 patches from the origila 256x256 images. This method allowed them to increase their training set by a factor of 2048, which next allowed them to use the final complex network with no significant over-fitting.\\
+
 \textbf{Dropout}
 This technique consists of setting to zero the output of the hidden neurons with probability 50\%. The neurons that are dropped out in this way, do not participate in the forward pass in the information and are excluded from the backpropagarion. This technique reduces complex co-adaptations of neurons,
 since a neuron cannot rely on the presence of particular other neurons. It is, therefore, forced to
@@ -111,8 +306,11 @@ Both Dense neural networks and Convolutional Neural networks are suitable for do
     The reason why convolutional neural network is hugely popular is because of their architecture, the best thing is there is no need of feature extraction.  The system learns to do feature extraction and the core concept is, it uses convolution of image and filters to generate invariant features which are passed on to the next layer. The features in next layer are convoluted with different filters to generate more invariant and abstract features and the process continues till it gets final feature/output which is invariant to occlusions.
 \section{The Model}
 
+* Describe Tensors as well
+
+
 \cite{VisualizingCNN}
-\cite{DeeperWithCNN}\\
+\\
 \\
 (Paraphrase)
 In machine learning, we aim to build predictive models that forecast the outcome for a given input data. To achieve this, we take additional steps to tune the trained model. So, we evaluate the performance of several candidate models to choose the best-performing one.
@@ -149,7 +347,61 @@ An underfitted model is not complex enough to recognize the patterns in the data
 Its a good practice to save the model after training into a .h5 format\\
 
 \textbf{Metrics}\\
+
+\textbf{Inference time (Calculation of the prediction)}
+\url{https://www.quora.com/What-is-inference-time-in-deep-learning#:~:text=Answer%3A%20In%20deep%20learning%2C%20inference,on%20new%20data%20very%20quickly.}
+
+
+Precision\\
+Recall\\
+Accuracy\\
+If during training the Validation accuracy is higher that the train accuracy, this may mean that the dropout layer is coausing this issue.
+* (Verify this with other sources.) When the training accuracy is calculated it is done with drop being active. This can lower the training accuracy to some degree. However when evaluating validation accuracy and test accuracy drop out is NOT active so the model is actually more accurate. 
+
+
+Validation accuracy being higher than training accuracy can typically happen for three major reasons:
+
+1. You have some kind of a regularization that is switched off during validation. Usually this happens with dropout regularization.
+
+2. Validation score is computed once after the whole epoch (after the net have seen whole dataset), while training score is averaged over the epoch.
+
+3. Random fluctuation.
+
+
+Regularization Effects: Techniques like dropout, batch normalization, and weight decay are typically only applied during training, not during evaluation on the validation set. This can make the model perform better on the validation set compared to the training set where these regularizations are active.
+
+Training Dynamics: During the early epochs of training, the model might still be learning and generalizing well on the validation set but has not yet fully optimized or overfitted on the training set. This can result in the validation accuracy temporarily being higher.
+
+Batch Effects: The training accuracy is often computed as an average over the mini-batches in an epoch. The model parameters are updated after each mini-batch, leading to potential fluctuations in training accuracy. In contrast, the validation accuracy is typically computed on a fixed dataset without updates, providing a more stable and sometimes higher accuracy.
+
+Data Augmentation: Data augmentation techniques are used during training to artificially increase the diversity of the training data, helping prevent overfitting. However, the augmented data can be more challenging, leading to a lower training accuracy. The validation set, which does not use augmentation, can appear easier by comparison.
+
+Shuffling and Sampling: If the training data is shuffled differently in each epoch, the mini-batches seen by the model can vary, leading to fluctuations in training accuracy. The validation set, however, remains constant and can show better performance due to consistent evaluation.
+
+Early Stopping: If you use early stopping based on validation accuracy, it might stop training at a point where the model performs best on the validation set, which might coincide with a slightly lower training accuracy at that specific checkpoint.
+
+It's important to note that while it is possible to see higher validation accuracy than training accuracy, it is typically not sustained over a long period of training. If this pattern continues persistently, it might be worth revisiting the data splits, regularization methods, and overall training procedure to ensure there are no underlying issues.
+
+-----------------------
+
+Data augmentation acts as a form of regularization, helping the model generalize better by preventing it from overfitting to the training data. While the augmented data may reduce training accuracy, it helps the model perform better on the unseen validation data.
+
+The model adapts to the augmented data by learning more robust features. This adaptation can lead to improved performance on the validation set, which consists of less challenging, unaugmented data, making the validation accuracy appear higher.
+
+Data augmentation is generally used to artificially increase the diversity of the training data by applying random transformations (e.g., rotations, flips, shifts, etc.). This helps the model generalize better by exposing it to a wider variety of scenarios during training. However, for the validation set, you typically want to use data that is representative of real-world, unseen data. This means the validation set should not include augmented data, as you want to evaluate the model's performance on unaltered, "real" data.
+
+https://www.linkedin.com/advice/0/what-some-common-pitfalls-best-practices-data-augmentation
+
+
+Can you perform Cross-Validation on CNN?
+One of the best ways to see if you do overfit is to make a k-fold split.
+\url{https://towardsdatascience.com/accuracy-precision-recall-or-f1-331fb37c5cb9}
+
+
 \textbf{Loss Function}\\
+\url{https://wandb.ai/mostafaibrahim17/ml-articles/reports/A-Deep-Dive-Into-Learning-Curves-in-Machine-Learning--Vmlldzo0NjA1ODY0#:~:text=The%20low%20training%20loss%20suggests,specific%20features%2C%20or%20excessive%20training.}
+
+\url{https://medium.com/@sanjay_dutta/understanding-why-validation-loss-can-be-lower-than-training-loss-in-machine-learning-models-b2b27195ca5d#:~:text=It%20is%20critical%20for%20assessing,loss%2C%20prompting%20a%20deeper%20analysis.}
     binary crossentropy
     
 \textbf{Activation Function}\\
@@ -170,7 +422,73 @@ see AI625.Lab06.ipynb
     \item Dropouts
 \end{itemize}
 
-\textbf{Using a pretrained convnet}
+When validation acc is greater the training acc.
+
+If you are wondering why the validation metrics are clearly better than the training metrics, the main factor is because layers like tf.keras.layers.BatchNormalization and tf.keras.layers.Dropout affect accuracy during training. They are turned off when calculating validation loss.
+To a lesser extent, it is also because training metrics report the average for an epoch, while validation metrics are evaluated after the epoch, so validation metrics see a model that has trained slightly longer.
+\url{https://www.tensorflow.org/tutorials/images/transfer_learning}
+
+\section{Pre-trained Convnet}
+
+There are many "Families" of Pre-Trained Convolutional Neural Networks in Keras Library. All are trained on the "Imagenet" dataset. "Imagenet" is an open-source collection of quality-controlled and human-annotated images, with the aim to help researched train large-scale object recognition models.
+This dataset contains more than 20,000 categories/classes and each class has several hundred images.
+
+Pre-Trained Convnets can offer many advantages in an Image classification task as they can generalize well from their pre-trained knowledge and identify a rich variety of features. Additionally, as they are already trained, they save us time and computational resources. Finally, they can be used for "Transfer Learning" i.e. can be fine-tunes on our specific dataset and be utilized for new tasks.
+
+On the other side, Pre-trained nets are not a "magic box" that can do all tasks excellently, but face limitations. They are very often prone to overfitting and could require a lot of tuning for a specific application. Moreover, their performance can be biased by the original training data, affecting transferability to significantly different tasks.
+
+The next chapters will describe a subset of the available Pre-trained models and introduce techniques like Fine-tunning and Feature extraction as a tool to adjust these model in our task.
+
+\begin{itemize}
+    \item \textbf{VGG16/VGG19}\\
+    \underline{VGG16} is a convolutional neural network (CNN) architecture proposed by the Visual Geometry Group (VGG) at the University of Oxford. It was introduced in the paper "Very Deep Convolutional Networks for Large-Scale Image Recognition" by Simonyan and Zisserman in 2014\cite{VGG16}. The VGG16 network is known for its simplicity and depth, consisting of 16 weight layers: 13 convolutional layers and 3 fully connected layers.
+
+    The network's architecture is structured in a sequential manner, with small 3x3 convolution filters applied repeatedly. This design choice allows the network to have a large receptive field with fewer parameters, making it both efficient and powerful for image recognition tasks. The 13 convolutional layers are grouped into five blocks, each followed by a max-pooling layer to reduce the spatial dimensions of the feature maps. After the convolutional blocks, three fully connected layers are added, ending with a softmax layer for classification.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/VGG16Arch.png}
+	\caption{The VGG16 Architecture}
+    \label{VGG16}
+\end{figure}
+\vfill
+
+    \underline{VGG19}\\
+    VGG19 is another convolutional neural network (CNN) from the Visual Geometry Group (VGG) at the University of Oxford, presented in the same paper as VGG16. As an extension of VGG16, VGG19 features a deeper architecture with 19 weight layers: 16 convolutional layers and 3 fully connected layers.
+
+    The structure of VGG19 is very similar to that of VGG16, with the primary difference being the addition of more convolutional layers, allowing the network to learn more complex features. VGG19 also employs small 3x3 convolution filters and follows the same design principles of sequential convolutional blocks followed by max-pooling layers. The deeper architecture can capture finer details and more abstract features, which potentially enhances its performance on challenging image recognition tasks.
+
+
+    \item \textbf{Inception Models (V1,V2,V3)}\\
+    The Inception family of models, also known as GoogLeNet, represents a series of deep convolutional neural network architectures developed by Szegedy et al. from Google. The initial Inception model, InceptionV1, was introduced in 2014, followed by several improved versions, including InceptionV2 and InceptionV3, each incorporating refinements to enhance performance and efficiency.
+
+    \underline{InceptionV1} \\
+    Introduced in 2014\cite{InceptionV1}, was a pioneering model designed to address the challenges of computational efficiency and deep network training. The core innovation of InceptionV1 is the Inception module, which applies multiple convolutions (e.g., 1x1, 3x3, 5x5) and a pooling operation in parallel within each module. The outputs of these operations are then concatenated, enabling the network to capture multi-scale features in the data. This architecture allows the network to learn both fine and coarse features while maintaining computational efficiency.
+
+    \underline{InceptionV2}\\
+    Introduced in 2015\cite{InceptionV2}, built upon the success of InceptionV1 by addressing some of its limitations and introducing additional refinements. One significant improvement was the introduction of Batch Normalization, which standardizes the inputs to each layer, thereby stabilizing and accelerating the training process. InceptionV2 also featured a more efficient grid size reduction method, which improved the model's ability to handle varying input sizes and reduced the computational burden.
+
+    \underline{InceptionV3}\\
+    Released in 2016\cite{InceptionV3}, is an evolution of the previous versions, incorporating several advancements to further enhance performance and efficiency. Key innovations in InceptionV3 include factorized convolutions, where larger convolutions are decomposed into smaller, more manageable operations (e.g., a 7x7 convolution is factorized into a sequence of 1x7 and 7x1 convolutions). This approach reduces computational cost while maintaining the ability to capture complex patterns.
+    InceptionV3 also employs techniques like label smoothing, which softens target labels to prevent overfitting, and an auxiliary classifier that provides intermediate supervision during training, helping to mitigate the vanishing gradient problem. These refinements, along with careful architectural tweaks, allow InceptionV3 to achieve high performance on large-scale image classification tasks, such as the ImageNet dataset.
+
+    In the context of this work we have worked on the latest version of this family of models, InceptionV3, and will present the results in the following sections.
+    
+    \item \textbf{Xception}\\
+    The Xception model, or "Extreme Inception", was introduced by the creator of Keras library, Francois Chollet in 2017 \cite{Xception} The model is an extension of the Inception architecture but incorporates depthwise separable convolutions to improve efficiency and performance.  
+    This architectural enhancement allows the model to learn more complex patterns in data with fewer parameters and reduced computational cost compared to traditional convolutions.
+
+    Xception's design is structured into three main flows: the Entry Flow, the Middle Flow, and the Exit Flow. The Entry Flow captures initial feature representations and reduces the spatial dimensions of the input image while increasing its depth. The Middle Flow consists of a series of identical modules that process the core features of the image. Finally, the Exit Flow refines these features and reduces the dimensions further to produce the final classification output. The use of depthwise separable convolutions in each module splits the convolution operation into a depthwise convolution followed by a pointwise convolution, making the model both efficient and powerful.
+    
+    The Xception and InceptionV3 architectures have the same number of parameters but the Xception model  performs slightly better but the performance gains are not due to increased capacity but rather to a more efficient use of model parameters.
+
+    \item ResNet50/ResNet101
+    \item MobileNet
+    \item DenceNet121
+    \item EfficientNet(B0-B7)
+    \item ConvNextTiny
+\end{itemize}
+
 
 \textbf{Fine-tuning}\\
 \cite{CholletDeeplearingWithPY} (p.154-155)
@@ -181,6 +499,7 @@ both the newly added part of the model (in this case, the fully connected classi
 and these top layers. This is called fine-tuning because it slightly adjusts the more
 abstract representations of the model being reused, in order to make them more relevant
 for the problem at hand.\\
+
 \textbf{Feature extraction}\\
 
 It’s easy to reuse an existing convnet on a new dataset via feature extraction.
@@ -200,38 +519,7 @@ model. This pushes performance a bit further
 
 
 
-\section{Imbalanced datasets}
 
-    \begin{itemize}
-        \item Resampling Techniques:\\
-        You can balance the dataset by either oversampling the minority class (by duplicating existing samples or generating synthetic ones) or undersampling the majority class (by randomly removing samples). Techniques such as SMOTE (Synthetic Minority Over-sampling Technique) can be useful for generating synthetic samples.
-        \item Weighted Loss Function:\\
-        Modify the loss function to penalize misclassifications of the minority class more than the majority class. This can be achieved by assigning higher weights to the minority class during training.
-        \item Cross-validation:\\ 
-        Utilize techniques such as stratified k-fold cross-validation to ensure that each fold of the data contains a proportional representation of both classes.
-        \item Transfer Learning:\\
-        If you have access to pre-trained models, you can leverage transfer learning techniques. Fine-tuning a pre-trained model on your imbalanced dataset might help alleviate the issue to some extent.
-        \item Experimentation:\\ Ultimately, the most reliable approach is empirical experimentation. Try training the model with different ratios and observe the performance metrics such as accuracy, precision, recall, and F1-score on a validation set. Choose the ratio that gives the best overall performance.
-    \end{itemize}
-
-\cite{TrainingDNN_Imbalanced_Data_Sets}
-(Paraphrase)
-Currently, mean squared error (MSE) is the most
-commonly used loss function in the standard deep learning
-algorithms. It works well on balanced data sets while it fails to
-deal with imbalanced ones. The reason is that MSE captures
-the errors from an overall perspective, which means it
-calculates the loss by firstly sum up all the errors from the
-whole data set and then calculates the average value. This can
-capture the errors from the majority and minority classes
-equally when the binary-classes data sets are balanced.
-However, when the data set is imbalanced, the error from the
-majority class contributes much more to the loss value than the
-error from the minority class. In this way, this loss function is
-biased towards majority class and fails to capture the errors
-from two classes equally. Further, the algorithms are very
-likely to learn biased representative features from the majority
-class and then achieve biased classification results.
 
 \section{Reducing Over-fitting}
     \begin{itemize}
@@ -239,6 +527,9 @@ class and then achieve biased classification results.
         \item  Learning Rate
         \item  Model Complexity: The model might be too complex for the given dataset, leading to overfitting
         \item  Data Augmentation
+        \textbf{Data Augmentation}
+The aim of this method is to reduce over-fitting by artificially enlarging the dataset. The authors \cite{KrizhevskySutskeverHinton} used two different types of data augmentation which both produce transformed images from the original images.
+\\The first type was the generation of new images by extracting random 224x224 patches from the origila 256x256 images. This method allowed them to increase their training set by a factor of 2048, which next allowed them to use the final complex network with no significant over-fitting.\\
         \item  Batch Size
         \item  Loss Function
         \item  Normalization
@@ -267,16 +558,29 @@ Thankfully, convolutional (deep) neural networks are not like that, in fact the 
 
 We will introduce three models in total.
 
-    \begin{itemize}
-        \item  Simple "vanilla" Model
-        \item  Model with Data Augmentation
-        \item  Pre-trained Model\\
+    Simple "vanilla" Model
+    Model with Data Augmentation
+    Pre-trained Model\\
         Feature Extraction\\
-        Fine Tuning     
+        Fine Tuning 
         
-    \end{itemize}
+            \begin{itemize}
+                \item Last conv Block (5-10 Layers)
+                \item Last 2 conv blocks (10-25 layers)
+                \item the whole pretrained network is unfreezed.
+            \end{itemize}
+        
 
 
-\printbibliography
+\section{Conclusions and Future Work}
+future work : real time image vision
+
+%%%%%%%%%%%%%%%%%%%%%%%%   Bibliography   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\printbibliography
+%\bibliographystyle{abbrvnat}%abbrvnat
+\printbibliography[heading=bibintoc, title={Bibliography}]
+%\bibliography{library}
+%\bibliography{bibliographyFile}
 
 \end{document}
