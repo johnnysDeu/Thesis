@@ -21,4 +21,4 @@ Dataset
         ├── Ads
         └── Regular
 ```
-https://github.com/dessa-oss/DeepFake-Detection
+
