@@ -1,10 +1,7 @@
-The main model i have created is in model.ipynb, and was trained on about 30.000 images (10.00 Ads, 20.000 simple images i.e. data_medium.rar)
+The main model I have created is in "Custom Model" folder and was trained on about 35.000 images (17.000 Ads, 17.000 simple images i.e. data_medium.rar)
 
-i am currently working on the PreTrained_Model.ipnyb, which is a pre-trained NN trained on the same 30.000 images.
+I also provide the code for all Pre-Trained networks that were used in this Thesis.
 
-The Data_Augmentation files will not be needed probably as we have collected more data which are enough to achive 90%+ accuracy in our Model.
-
-The Model_Optimizers was used to select the optimal optimizer
 
 The Dataset
 
